@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const mailInfo = require('./mailInfo');
-const mailfrom = 'molly724@naver.com';
+const mailfrom = '@naver.com'; //자기 네이버 메일
 
 const connection = mysql.createConnection({
   host: 'localhost',
