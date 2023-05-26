@@ -6,6 +6,7 @@ const socket = require('socket.io');
 const http = require('http');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
+const Korean = require('korean');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -267,6 +268,44 @@ app.post('/myPage', (req, res) => {
   });
 });
 
+
+// 워드클라우드 데이터 요청에 대한 처리
+app.get('/wordcloud', (req, res) => {
+  // 채팅 로그 데이터를 DB에서 가져오는 작업
+  logdata.query('SELECT message FROM chatlogs', (err, results) => {
+    if (err) {
+      console.error('채팅 로그 데이터 조회 에러:', err);
+      res.status(500).json({ error: '채팅 로그 데이터 조회에 실패했습니다.' });
+      return;
+    }
+
+    // 채팅 로그 데이터를 단어로 분리하여 단어 빈도수를 계산하는 작업
+    const wordCounts = {}; // 단어 빈도수를 저장할 객체
+
+    for (let i = 0; i < results.length; i++) {
+      const message = results[i].message;
+
+      // 한글 문장을 형태소로 분석하여 단어 추출
+      const words = Korean.TextAnalyzer.tokens(message)
+        .filter((token) => token.pos !== 'Josa') // 조사 제외
+        .map((token) => token.text);
+
+      for (let j = 0; j < words.length; j++) {
+        const word = words[j];
+
+        if (wordCounts[word]) {
+          wordCounts[word]++; // 이미 존재하는 단어면 빈도수 증가
+        } else {
+          wordCounts[word] = 1; // 새로운 단어면 빈도수 초기화
+        }
+      }
+    }
+
+    // 클라이언트로 단어 빈도수 정보를 전달
+    res.json({ wordCounts });
+  });
+});
+
 function generateSessionID() {
   // 세션 아이디를 생성하는 로직을 구현합니다.
   // 예시: 현재 시간을 기반으로 랜덤한 문자열을 생성하여 사용
@@ -461,6 +500,7 @@ function generateChatRoomId() {
   let min = ("0" + date.getMinutes()).slice(-2);
   let sec = ("0" + date.getSeconds()).slice(-2);
   const timestamp = `${year}-${month}-${day}/${hour}:${min}:${sec}`
+  console.log("생성된 룸:"+'room_' + Math.random().toString(36).substr(2, 9)+timestamp);
   return 'room_' + Math.random().toString(36).substr(2, 9)+timestamp;
 }
 
