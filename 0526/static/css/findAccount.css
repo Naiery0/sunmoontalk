@@ -1,0 +1,55 @@
+html{
+    background-color: RGB(245,246,247);
+    font-family: omyu_pretty;
+}
+.findAccount_wrap{
+    position: absolute;
+    width:35em;
+    height:30em;
+    left:35%;
+    top:15%;
+}
+.Boldlabel{
+    position: relative;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 0.5em;
+    top:5em;
+
+}
+.Boldlabel:nth-of-type(3){
+    display: inline-block;
+    top:7em;
+}
+.label{
+    display: inline-block;;
+    position: relative;
+    font-size: 1.3em;
+    margin-left: 0.5em;
+    top:6.25em;
+}
+input{
+    font-family: omyu_pretty;
+}
+#findEmail{
+    position: relative;
+    border:1px solid lightgray;
+    font-size:1.5em;
+    top:7.5em;
+    width:19.3em;
+    height:2em;
+    padding-left:0.5em;
+    margin-left:0.5em;
+}
+#findEmail:focus{
+    outline:none;
+}
+.btn{
+    position:relative;
+    font-size:1.5em;
+    width:9.6em;
+    height:2em;
+    top:10em;
+    margin-left:0.5em;
+    cursor:pointer;
+}

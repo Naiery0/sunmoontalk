@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="./css/style.css" type="text/css" rel="stylesheet">
+    <link href="./css/main.css" type="text/css" rel="stylesheet">
+    <script src="socket.io/socket.io.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo" onclick="convertScreen('./index.html')">
+            <img class="logo" src="./assets/logo.png">
+            <span class="logoLabel">TALK</span>
+        </div>
+
+        <div class="header-nav">
+            <table>
+                <tr>
+                    <td class="nav-opt" onclick="changeContent('./html/chat.html')" >랜덤채팅</td>
+                    <td class="nav-opt">커뮤니티</td>
+                    <td class="nav-opt">지원</td>
+                    <td class="nav-opt" id="tableopt" onclick="convertScreen('./html/login.html')">로그인</td>
+                </tr>
+            </table>
+        </div>
+    </header>
+    <section>
+        <iframe class="content" id="content" src="./html/match.html"></iframe>
+    </section>
+    <script src="./js/main.js"></script>
+</body>
+</html>

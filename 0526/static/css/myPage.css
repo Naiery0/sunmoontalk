@@ -1,0 +1,59 @@
+.wrap{
+    position: absolute;
+    width: 90%;
+    height: 80%;
+
+    margin-left:3em;
+    margin-top:3em;
+    font-family: SUNMOON;
+    display:inline-block;
+}
+.myPageLogo{
+    position:relative;
+    font-size:2em;
+    font-weight:bold;
+    color:gray;
+    width:50%;
+}
+.label{
+    position:relative;
+    display: inline-block;
+    font-weight: bold;
+    font-size:1.3em;
+    width:80%;
+    height:5%;
+    margin-top:2em;
+    margin-left:3em;
+    border-bottom:1px solid lightgray;
+}
+.label2{
+    position:relative;
+    display: inline-block;
+    font-size:1.2em;
+    width:80%;
+    height:5%;
+    margin-top:0.5em;
+    margin-left:5em;
+    color:gray;
+}
+.btn{
+    position:relative;
+    border:1px solid lightgray;
+    background-color: darkgray;
+    color:black;
+    font-size:1.2em;
+    width:6em;
+    height:1.8em;
+    right:10%;
+    cursor:pointer;
+    transition:all ease 0.2s;
+    font-family: SUNMOON;
+}
+.btn:hover{
+    background-color: gray;
+}
+.logout{
+    position:absolute;
+    top:0em;
+    right:6.5em;
+}

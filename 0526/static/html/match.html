@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <link href="../css/match.css" type="text/css" rel="stylesheet">
+    <link href="../css/main.css" type="text/css" rel="stylesheet">
+    <script src="../socket.io/socket.io.js"></script>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+    <div id="chatMain">
+        <div id="chatLobby">
+            <span>익명의 상대방과 대화를 나눠보세요!</span>
+            <input class="btn" type="button" value="시작하기">
+        </div>  
+        <div id="chatLoading">
+
+            <span id="chatLoadBigCircle">
+                <span class="chatLoadCircle">
+                </span>
+            </span>
+            <span class="chatLoadLabel">대상을 찾는중...</span>
+            
+        </div>
+    </div>
+    <script src="../js/match.js"></script>
+</body>
+</html>

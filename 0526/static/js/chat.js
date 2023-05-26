@@ -1,0 +1,134 @@
+const chatLog = document.getElementById("chatLog");
+const chatInput = document.getElementById("chat_Input");
+
+const socket = io();
+
+const username=localStorage.getItem('username');
+
+let chatLogs=[];
+let chatRoomId;
+// 메세지 수신함수
+socket.on('connect', function () {
+    let name = "익명";
+    //이부분에서 match.js에서 보내준 chatRoomId를 받아서
+    chatRoomId = localStorage.getItem('roomid');
+    console.log("match에서 가져온 룸아디: ", chatRoomId);
+    //서버에 새로운 유저가 왔다 알림
+    //이부분에서 chatRoomId를 서버로 보낸다.
+    //서버가 받으면 수신한 소켓에게 chatRoomId를 부여한다.
+    socket.emit('sendRoomId', chatRoomId);
+    //
+    socket.emit('newUser', name);
+})
+
+//로그 요청 받음
+socket.on('giveLog',function(){
+    socket.emit('log', chatLogs);
+})
+
+socket.on('disconnect', function () {
+    // 서버와의 연결이 끊겼음을 사용자에게 알림
+    chatLog.innerHTML +=
+        "<span class='chat_message_wrap'>"
+        + "<span class='chat_notice'>"
+        + "<span class='chat_output'>" + '서버와의 연결이 끊어졌습니다.' + "</span>"
+        + "</span>"
+        + "</span>";
+
+    // 채팅 입력 폼 비활성화
+    chatInput.disabled = true;
+});
+
+
+socket.on('update', function (data) {
+
+    if (data.type == 'disconnect') { //이 부분은 상대가 나갔으면 상대방 나갔다고 출력하는 부분임. `${data.message}`만 유지해주면 댐
+        chatLog.innerHTML +=
+            "<span class='chat_message_wrap'>"
+            + "<span class='chat_notice'>"
+            + "<span class='chat_output'>" + `${data.message}` + "</span>"
+            + "</span>"
+            + "</span>";
+
+        chatInput.disabled = true;
+    }
+    else {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1 필요, 앞에 0을 붙여 2자리로 만듦
+        let day = ("0" + date.getDate()).slice(-2); // 일, 앞에 0을 붙여 2자리로 만듦
+        let hour = ("0" + date.getHours()).slice(-2);
+        let min = ("0" + date.getMinutes()).slice(-2);
+        let sec = ("0" + date.getSeconds()).slice(-2);
+
+        if (hour < 10) hour = "0" + hour;
+        if (min < 10) min = "0" + min;
+
+        chatLog.innerHTML +=
+            "<span class='chat_message_wrap'>"
+                + "<span class='chat chat_message_other' id='chat_wrap'>"
+                    + "<span class='chat_output_wrap'>"
+                        + "<span class='chat_time_other'>" + hour + ":" + min + "</span>"
+                        + "<span class='chat_output' id='chat_output'>" + `${data.message}` + "</span>"
+                    + "</span>"
+                + "</span>"
+            + "</span>";
+        chatLog.scrollTop = chatLog.scrollHeight;
+        chatLogs.push({ roomid: chatRoomId, username: `${data.username}`, message: `${data.message}`, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
+        //console.log(`${data.name}: ${data.message}`);
+    }
+});
+
+// 메세지 전송함수
+function send() {
+    // 입력한 메세지를 message에 저장
+    let message = chatInput.value;
+
+    if (message != "") {
+
+        let escapedMessage = escapeHTML(message);
+
+        // 메세지 입력 칸 초기화
+        chatInput.value = ''
+
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1 필요, 앞에 0을 붙여 2자리로 만듦
+        let day = ("0" + date.getDate()).slice(-2); // 일, 앞에 0을 붙여 2자리로 만듦
+        let hour = ("0" + date.getHours()).slice(-2);
+        let min = ("0" + date.getMinutes()).slice(-2);
+        let sec = ("0" + date.getSeconds()).slice(-2);
+
+        if (hour < 10) hour = "0" + hour;
+        if (min < 10) min = "0" + min;
+
+        chatLog.innerHTML +=
+            "<span class='chat_message_wrap'>"
+                + "<span class='chat chat_message_mine'>"
+                    + "<span class='chat_output_wrap' id='chat_warp' >"
+                        + "<span class='chat_time_mine'>" + hour + ":" + min + "</span>"
+                        + "<span class='chat_output' id='chat_output'>" + escapedMessage + "</span>"
+                    + "</span>"
+                + "</span>"
+            + "</span>";
+        //서버에 메세지 이벤트, 내용 전달
+        socket.emit('message', { type: 'message', username: username, message: message });
+        chatLogs.push({ roomid: chatRoomId, username: username,  message: message, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
+        chatLog.scrollTop = chatLog.scrollHeight;
+    }
+}
+//////////////////////////////
+
+
+addEventListener('keydown', (event) => {
+    if (event.keyCode === 13) {
+        send();
+    }
+});
+
+function escapeHTML(html) {
+    let element = document.createElement('div');
+    element.innerText = html;
+    return element.innerHTML;
+}
+

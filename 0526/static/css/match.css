@@ -1,0 +1,85 @@
+html{
+  user-select: none;
+  font-family: "omyu_pretty";
+}
+#chatWrap{
+  position: absolute;
+  width:99%;
+  height:99%;
+
+  left:0.3em;
+  top:0.2em;
+
+  display: none;
+}
+#chatMain{
+  position:absolute;
+  font-size:3em;
+  width:99%;
+  height:98%;
+  background-color: skyblue;
+  border-radius: 30px;
+  color:white;
+  z-index:10;
+
+  display:block;
+}
+.btn{
+  position: relative;
+  font-size:0.7em;
+  border: 1px solid white;
+  border-radius: 15px;
+  color:white;
+  background-color: transparent;
+  font-family: "omyu_pretty";
+  cursor:pointer;
+  margin-top:10em;
+
+  width:5em;
+  height:1.5em;
+  transition: all ease 0.5s;
+}
+.btn:hover{
+  border:1px solid skyblue;
+  background-color: white;
+  color: skyblue;
+}
+#chatLobby{
+  width:100%;
+  height:100%;
+
+  display:flex; /* flex */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#chatLoading{
+  width:100%;
+  height:100%;
+  
+  display:none; /* */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#chatLoadBigCircle{
+  position:relative;
+  border-radius:50%;
+  width:3em;
+  height:3em;
+  background-color: white;
+  background: conic-gradient(white 0% 15%, skyblue 10% 100%);
+}
+.chatLoadCircle{
+  position:absolute;
+  border-radius:50%;
+  width:2em;
+  height:2em;
+  top:0.495em;
+  left:0.495em;
+  background-color: skyblue;
+}
+.chatLoadLabel {
+position:relative;
+margin-top:1em;
+}

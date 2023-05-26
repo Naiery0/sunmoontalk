@@ -1,0 +1,61 @@
+
+html{
+    user-select: none;
+    background-color : RGB(245,246,247);
+}
+.login_wrap{
+    position: absolute;
+    width: 40%;
+    height:50%;
+    top:20%;
+    left:30%;
+    display:inline-block;
+}
+.input{
+    position: relative;
+    font-size:1.5em;
+    font-family: omyu_pretty;
+
+    border:1px solid lightgray;
+    width: 25em;
+    height: 1.5em;
+    margin-bottom: 1em;
+    top:6em;
+}
+#username,#password{
+    padding-left:0.5em;
+}
+#btn{
+    cursor:pointer;
+    width:25.65em;
+    transition: all ease 0.2s;
+}
+#btn:hover{
+    background-color: lightgray;
+}
+.manage_wrap{
+    position: absolute;
+    width:31.8em;
+    height:2em;
+    top:20em;
+    text-align: center;
+    color:gray;
+    
+    font-size:1.2em;
+    font-family: omyu_pretty;
+}
+.manage{
+    cursor:pointer;
+}
+.label{
+    position:relative;
+    color:red;
+    top:6.5em;
+    font-size:1.4em;
+    font-family: omyu_pretty;
+    width:27.4em;
+    height:1em;
+    text-align: left;
+
+    display: none;
+}

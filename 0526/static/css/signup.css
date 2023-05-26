@@ -1,0 +1,75 @@
+html{
+    background-color : RGB(245,246,247);
+    user-select: none;
+}
+.container{
+    position:absolute;
+    width:38em;
+    height:45em;
+
+    font-family:omyu_pretty;
+    left:32%;
+    top:10%;
+}
+label,input{font-family:omyu_pretty;}
+
+.form-group{
+    position:relative;
+    width:38em;
+    height:5.5em;
+    top:7em;
+    left:1em;
+
+    margin-bottom:1.2em;
+}
+.input{
+    position: relative;
+    font-size:1.5em;
+
+    border:1px solid lightgray;
+    width: 25em;
+    height: 2em;
+    margin-top:0.3em;
+    padding-left:0.5em;
+}
+label{
+    position:relative;
+    font-size:1.5em;
+}
+.btn{
+    cursor:pointer;
+    font-size:1.5em;
+    width:6em;
+    height:1.5em;
+    transition: all ease 0.2s;
+    border:1px solid lightgray;
+    font-family:omyu_pretty;
+
+}
+.btn:hover{
+    background-color: lightgray;
+}
+#check-username-btn{
+    position:absolute;
+    right:0em;
+    margin-top:-1.85em;
+}
+#send-verification-btn{
+    position:absolute;
+    right:0em;
+    margin-top:-1.85em;
+}
+.signup-btn{
+    position:absolute;
+    left:0.65em;
+    bottom:0em;
+    width:101%;
+    height:2em;
+}
+.notice{
+    position:relative;
+    display:none;
+    font-size:1.1em;
+    margin-left:4em;
+    color:RGB(214,0,63);
+}

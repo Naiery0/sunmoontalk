@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link href="../css/login.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <script src="../js/main.js"></script>
+    
+</head>
+<body>
+    <div class="login_wrap">
+        
+        <div class="logo_wrap" onclick="convertScreen('../index.html')">
+            <div class="logo">
+                <img class="logo" src="../assets/logo.png">
+                <span class="logoLabel">TALK</span>
+            </div>
+        </div>
+
+        <form id="loginForm">
+            <input class="input" id="username" name="username" type="text" autocomplete="off" placeholder="아이디">
+            <input class="input" id="password" name="password" type="password" placeholder="비밀번호">
+            <button class="input" id="btn" type="submit">로그인</button>
+        </form>
+
+        <span class="label" id="notice">아이디 또는 비밀번호가 일치하지 않습니다</span>
+        <div class="manage_wrap">
+            <span class="manage" id="findAccount" onclick="convertScreen('./findAccount.html')">계정찾기</span>
+            <span>/</span>
+            <span class="manage" id="createID" onclick="convertScreen('./signup.html')">회원가입</span>
+        </div>
+    </div>
+    <script src="../js/login.js"></script>
+</body>
+</html>
