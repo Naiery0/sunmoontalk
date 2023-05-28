@@ -6,8 +6,6 @@ const socket = require('socket.io');
 const http = require('http');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
-const Korean = require('korean');
-
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -268,8 +266,7 @@ app.post('/myPage', (req, res) => {
   });
 });
 
-
-// 워드클라우드 데이터 요청에 대한 처리
+// 워드클라우드 데이터 요청에 대한 처리.....형태소 분석이 없는 ver
 app.get('/wordcloud', (req, res) => {
   // 채팅 로그 데이터를 DB에서 가져오는 작업
   logdata.query('SELECT message FROM chatlogs', (err, results) => {
@@ -285,13 +282,16 @@ app.get('/wordcloud', (req, res) => {
     for (let i = 0; i < results.length; i++) {
       const message = results[i].message;
 
-      // 한글 문장을 형태소로 분석하여 단어 추출
-      const words = Korean.TextAnalyzer.tokens(message)
-        .filter((token) => token.pos !== 'Josa') // 조사 제외
-        .map((token) => token.text);
+      // 은/는/이/가/을/를에 따라 단어를 분리
+      const words = message.split(/은 |는 |이 |가 |을 |를|, |. /);
 
       for (let j = 0; j < words.length; j++) {
-        const word = words[j];
+        const word = words[j].trim();
+
+        // 자음이나 모음만 있는 글자는 제외
+        if (isOnlyConsonantsOrVowels(word)) {
+          continue;
+        }
 
         if (wordCounts[word]) {
           wordCounts[word]++; // 이미 존재하는 단어면 빈도수 증가
@@ -305,6 +305,19 @@ app.get('/wordcloud', (req, res) => {
     res.json({ wordCounts });
   });
 });
+
+// 자음이나 모음만 있는 글자인지 확인하는 함수
+function isOnlyConsonantsOrVowels(word) {
+  const consonants = /[ㄱ-ㅎ]/;
+  const vowels = /[ㅏ-ㅣ]/;
+
+  // 자음이나 모음만 있는 글자인지 검사
+  return word.split('').every((char) => {
+    return consonants.test(char) || vowels.test(char);
+  });
+}
+
+
 
 function generateSessionID() {
   // 세션 아이디를 생성하는 로직을 구현합니다.

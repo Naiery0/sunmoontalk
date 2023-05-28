@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "java": "^0.13.0",
+    "koalanlp": "^2.1.3",
+    "util": "^0.12.5",
+    "wordcloud": "^1.2.2",
+    "wordcloud2": "^1.0.0"
+  }
+}
