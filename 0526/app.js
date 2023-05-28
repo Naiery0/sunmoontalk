@@ -6,6 +6,8 @@ const socket = require('socket.io');
 const http = require('http');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
+const { exec } = require('child_process');
+
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -265,7 +267,7 @@ app.post('/myPage', (req, res) => {
     }
   });
 });
-
+/*
 // 워드클라우드 데이터 요청에 대한 처리.....형태소 분석이 없는 ver
 app.get('/wordcloud', (req, res) => {
   // 채팅 로그 데이터를 DB에서 가져오는 작업
@@ -315,8 +317,26 @@ function isOnlyConsonantsOrVowels(word) {
   return word.split('').every((char) => {
     return consonants.test(char) || vowels.test(char);
   });
-}
+}*/
 
+// 워드클라우드 데이터 요청에 대한 처리
+app.get('/wordcloud', (req, res) => {
+  exec('python wordCloud.py', (error, stdout, stderr) => {
+    if (error) {
+      console.error('파이썬 스크립트 실행 에러:', error);
+      res.status(500).json({ error: '워드클라우드 데이터 처리에 실패했습니다.' });
+      return;
+    }
+
+    try {
+      const wordCounts = JSON.parse(stdout);
+      res.json({ wordCounts });
+    } catch (parseError) {
+      console.error('JSON 파싱 에러:', parseError);
+      res.status(500).json({ error: '데이터 파싱에 실패했습니다.' });
+    }
+  });
+});
 
 
 function generateSessionID() {
