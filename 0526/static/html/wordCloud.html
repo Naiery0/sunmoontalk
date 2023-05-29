@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>Chat Log Word Cloud</title>
-  <!-- wordcloud2.js 라이브러리 -->
+  <link href="../css/main.css" type="text/css" rel="stylesheet">
+  <link href="../css/wordCloud.css" type="text/css" rel="stylesheet"> <!--워드클라우드에 폰트 적용이 안됭-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.0/wordcloud2.min.js"></script>
   <style>
-    #wordcloud {
-      width: 800px;
-      height: 500px;
-    }
   </style>
 </head>
 <body>
   <div id="wordcloud"></div>
 
-  <script>
-    // 서버에 워드클라우드 데이터 요청
-    fetch('/wordcloud')
+  <script src="../js/wordCloud.js">
+    /*
+        // 서버에 워드클라우드 데이터 요청
+        fetch('/wordcloud')
       .then((response) => {
         if (!response.ok) {
           throw new Error('워드클라우드 데이터 요청 실패');
@@ -52,7 +50,9 @@
 
       // 워드클라우드 생성
       WordCloud(document.getElementById('wordcloud'), options);
-    }
+    }*/
+
+
   </script>
 </body>
 </html>
