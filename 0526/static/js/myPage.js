@@ -60,7 +60,13 @@ function displayInfo() {
             consloe.log(data.userEmail);
             consloe.log(data.userNickname);*/
             id.innerText = data.username;
-            pw.innerText = data.password;
+
+            pw.innerText = "";
+            for(let i=0;i<data.password.length;i++){
+                pw.innerText += "*"; 
+            }
+            //pw.innerText = data.password;
+
             email.innerText = data.email;
             nickname.innerText = data.nickname;
         })
