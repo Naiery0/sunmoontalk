@@ -1,4 +1,5 @@
-let checkId=0;
+let checkId = 0;
+let checkEmail = 0;
 let mailCode;
 // 중복 체크 버튼의 이벤트 리스너
 function checkUsername() {
@@ -95,6 +96,7 @@ function sendVerificationCode(event) {
             noticeCODE.style.display = 'inline';
             noticeCODE.style.color = 'RGB(0,117,128)';
             noticeCODE.innerText = "인증코드가 전송되었습니다!";
+            checkEmail = 1;
           }
         })
         .catch(error => {
@@ -256,6 +258,16 @@ function checkInfo(event) {
     noticeEMAIL.style.display = 'none';
   }
 
+  if(checkEmail===0){
+    noticeEMAIL.style.display = 'inline';
+    noticeEMAIL.style.color = 'RGB(214,0,63)';
+    noticeEMAIL.innerText = "이메일 인증을 해주세요";
+    flag = 1;
+  }
+  else{
+    noticeEMAIL.style.display = 'none';
+  }
+
   if (CODE.value == "" || CODE.value == null) {
     noticeCODE.style.display = 'inline';
     noticeCODE.innerText = "인증코드를 입력해주세요"
@@ -275,13 +287,24 @@ function checkInfo(event) {
   }
 }
 
-let temp_ID = "";
 function changeID(){
+  let usernameInput = document.getElementById("username");
+  let previousValue = usernameInput.dataset.previousValue || "";
+  let currentValue = usernameInput.value;
 
-  let trigger = document.getElementById("username");
-
-  if(temp_ID!=trigger.value){
+  if (previousValue !== currentValue) {
+    usernameInput.dataset.previousValue = currentValue;
     checkId = 0;
   }
-  else  temp_ID = trigger.ID;
+}
+function changeEmail(){
+  let emailInput = document.getElementById("email");
+  let previousValue = emailInput.dataset.previousValue || "";
+  let currentValue = emailInput.value;
+
+  if (previousValue !== currentValue) {
+    // 이전 값과 현재 값이 다르면 이벤트를 발생시킴
+    emailInput.dataset.previousValue = currentValue;
+    checkEmail = 0;
+  }
 }
