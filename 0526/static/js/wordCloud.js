@@ -22,7 +22,7 @@
         list: Object.entries(wordCounts),
         gridSize: 10,
         weightFactor: 5,
-        fontFamily: 'Arial',
+       //fontFamily: 'Arial', 폰트 직접 이 파일에서 적용하는게 빠를 듯
         color: 'random-dark',
         rotateRatio: 0.5,
         backgroundColor: '#fff',
