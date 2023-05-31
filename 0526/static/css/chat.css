@@ -1,50 +1,62 @@
-
-html{
+html {
     font-family: "omyu_pretty";
 }
-#chatLog{
-    position:absolute;
-    width:95%;
-    height:90%;
 
-    left:2.5%;
-    top:1%;
+#chat_Input {
+    position: absolute;
+    border: none;
+    width: 94.8%;
+    height: 5%;
+    min-height: 1.5em;
+    padding-left: 0.5em;
+    font-family: omyu_pretty;
 
-    overflow: auto;
-    background-color:aliceblue;
+    left: 2.5%;
+    bottom: 2%;
+    font-size: 1.5em;
 }
-#chatLog::-webkit-scrollbar{
-    display:block;
+
+#chat_Input:focus {
+    outline: none;
 }
-#chatLog::-webkit-scrollbar-thumb{
+
+#chatLog {
+    position: absolute;
+    width: 95%;
+    height: 90%;
+
+    left: 2.5%;
+    top: 1%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: aliceblue;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+#chatLog::-webkit-scrollbar {
+    display: block;
+}
+
+#chatLog::-webkit-scrollbar-thumb {
     background-color: lightgray;
     border-radius: 10px;
 }
-#chat_Input{
-    position: absolute;
-    border : none;
-    width:94.8%;
-    height:5%;
-    min-height:1.5em;
-    padding-left:0.5em;
-    font-family: omyu_pretty;
 
-    left:2.5%;
-    bottom:2%;
-    font-size:1.5em;
+.chat_message_wrap {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
-#chat_Input:focus{outline:none;}
-.chat_message_wrap{
-    position: relative;
-    display: inline-block;
-    width:90%;
-    height:auto;
-    min-height: 2.2em;
-    left:5%;
-    margin-top: 0.25em;
-    margin-bottom:0.25em;
-    z-index:5;
+
+.chat_message_wrap .chat_message_mine {
+    margin-right: 1em;
 }
+.chat_message_wrap .chat_message_other{
+    margin-left: 1em;
+}
+/*
 .chat{
     position:absolute;
     font-size:1.5em;
@@ -57,68 +69,90 @@ html{
     padding-left : 0.5em;
     padding-right : 0.5em;
     line-height:1.5;
-    box-sizing: border-box; /* border와 padding 값이 요소 크기에 포함되도록 설정 */
+    box-sizing: border-box; 
     display:inline;
     bottom:0;
     white-space:normal;
+}
+*/
+.chat_message_mine {
+    position:relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    /*margin-bottom: 5px;*/
+}
 
-}
-.chat_message_other{
-    left:0;
-}
-.chat_message_other::before{
-    content:'';
-    position:absolute;
-    background-color: white;
-
-    font-size:1em;
-    width:0.5em;
-    height:0.5em;
-    left:-0.4em;
-    top:0.5em;
-    clip-path: polygon(0 50%, 100% 0, 100% 100%);
-}
-.chat_message_mine{
-    background-color:yellow;
-    right:0;
-    
-}
-.chat_message_mine::before{
+.chat_message_mine::before {
     content:'';
     position:absolute;
     background-color: yellow;
 
     font-size:1em;
-    width:0.5em;
-    height:0.5em;
-    right:-0.4em;
-    top:0.5em;
+    width:0.7em;
+    height:0.7em;
+    right:-0.7em;
+    top:1.2em;
     clip-path: polygon(100% 50%, 0 0, 0 100%);
 }
-.chat_output_wrap{
-    position:relative;
-    width: 80%;
-    max-width: 80%;
-    white-space:break-spaces;
-    word-break: break-all;
+
+.chat_message_mine .chat_output {
+    background-color: yellow;
+    color: black;
+    padding: 0.5em;
+    border-radius: 15px;
+    max-width: 70%;
+    font-size: 1.5em;
 }
-.chat_time_other{
-    position:absolute;
-    color:lightgray;
-    font-size:0.7em;
-    right:-3em;
-    top:0.5em;
-}.chat_time_mine{
-    position:absolute;
-    color:lightgray;
-    font-size:0.7em;
-    left:-3em;
-    top:0.5em;
+
+.chat_message_mine .chat_time {
+    color: lightgray;
+    font-size: 1em;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
-.chat_notice{
-    position:relative;
-    font-size:1.5em;
-    color:gray;
-    left:1em;
-    top:0.15em;
+
+.chat_message_other {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    /*margin-bottom: 5px;*/
+}
+
+.chat_message_other::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+
+    font-size: 1em;
+    width: 0.7em;
+    height: 0.7em;
+    left: -0.7em;
+    top: 1.2em;
+    clip-path: polygon(0 50%, 100% 0, 100% 100%);
+}
+
+.chat_message_other .chat_output {
+    background-color: white;
+    color: black;
+    padding: 0.5em;
+    border-radius: 15px;
+    max-width: 70%;
+    font-size: 1.5em;
+}
+
+.chat_message_other .chat_time {
+    color: lightgray;
+    font-size: 1em;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.chat_notice {
+    position: relative;
+    font-size: 1.5em;
+    color: gray;
+    left: 1em;
+    top: 0.15em;
 }
