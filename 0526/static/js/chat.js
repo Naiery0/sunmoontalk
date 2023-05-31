@@ -65,14 +65,17 @@ socket.on('update', function (data) {
         if (min < 10) min = "0" + min;
 
         chatLog.innerHTML +=
-            "<span class='chat_message_wrap'>"
-                + "<span class='chat chat_message_other' id='chat_wrap'>"
-                    + "<span class='chat_output_wrap'>"
-                        + "<span class='chat_time_other'>" + hour + ":" + min + "</span>"
-                        + "<span class='chat_output' id='chat_output'>" + `${data.message}` + "</span>"
-                    + "</span>"
-                + "</span>"
-            + "</span>";
+        "<div class='chat_message_wrap'>" +
+            "<div class='chat chat_message_other'>" +
+                "<div class='chat_output'>" +
+                    `${data.message}` +
+                "</div>" +
+                "<div class='chat_time chat_time_other'>" +
+                    hour +":" +min +
+                "</div>" +
+            "</div>" +
+        "</div>";
+
         chatLog.scrollTop = chatLog.scrollHeight;
         chatLogs.push({ roomid: chatRoomId, username: `${data.username}`, message: `${data.message}`, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
         //console.log(`${data.name}: ${data.message}`);
@@ -103,14 +106,17 @@ function send() {
         if (min < 10) min = "0" + min;
 
         chatLog.innerHTML +=
-            "<span class='chat_message_wrap'>"
-                + "<span class='chat chat_message_mine'>"
-                    + "<span class='chat_output_wrap' id='chat_warp' >"
-                        + "<span class='chat_time_mine'>" + hour + ":" + min + "</span>"
-                        + "<span class='chat_output' id='chat_output'>" + escapedMessage + "</span>"
-                    + "</span>"
-                + "</span>"
-            + "</span>";
+            "<div class='chat_message_wrap'>" +
+                "<div class='chat chat_message_mine'>" +
+                    "<div class='chat_time chat_time_mine'>" +
+                        hour +":" +min +
+                    "</div>" +
+                    "<div class='chat_output'>" +
+                        escapedMessage +
+                    "</div>" +                
+                "</div>" +
+            "</div>";
+
         //서버에 메세지 이벤트, 내용 전달
         socket.emit('message', { type: 'message', username: username, message: message });
         chatLogs.push({ roomid: chatRoomId, username: username,  message: message, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
@@ -126,6 +132,7 @@ addEventListener('keydown', (event) => {
     }
 });
 
+// input에서 document에 접근하지 못하도록 만드는 기능
 function escapeHTML(html) {
     let element = document.createElement('div');
     element.innerText = html;
