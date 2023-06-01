@@ -75,6 +75,10 @@ html {
     white-space:normal;
 }
 */
+.chat{
+    white-space: break-spaces;
+    word-break: break-all;
+}
 .chat_message_mine {
     position:relative;
     display: flex;
