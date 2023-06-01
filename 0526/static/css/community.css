@@ -73,6 +73,9 @@ input{
     left:-1em;
     margin-bottom:1em;
 }
+#search:focus{
+    outline: none;
+}
 .searchBtn{
     position:absolute;
     top:0.7em;
