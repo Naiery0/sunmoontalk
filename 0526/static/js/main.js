@@ -1,7 +1,15 @@
+// 현재 내 화면의 경로를 이동함
 function convertScreen(url){
     location.href = url;
 }
 
+// index.html 내의 iframe인 "content"의 경로를 이동함
+function changeContent(url){
+  const content  = document.getElementById("content");
+  content.src=url;
+}
+
+// 세션아이디를 얻어오는 함수
 function getSessionID(){
     const cookies = document.cookie.split(";"); // 모든 쿠키 가져오기
     //console.log(cookies);
@@ -15,6 +23,7 @@ function getSessionID(){
     return null; // sessionID 쿠키를 찾지 못한 경우 null 반환
 }
 
+// 로그인이 되어있는지 확인하는 함수 -> cookie에 sessionID가 있는지만 확인함으로 어설픔 ㅜ
 function isLogin() {
     const sessionID = getSessionID();
     const opt = document.getElementById("tableopt");
@@ -40,9 +49,3 @@ function isLogin() {
   }
 
 isLogin(); // index.html이 로드될 때마다 로그인 되었는지 확인
-
-function changeContent(url){
-  const content  = document.getElementById("content");
-  content.src=url;
-}
-  
