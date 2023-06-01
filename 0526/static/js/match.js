@@ -7,6 +7,8 @@ function requestMatch() {
   console.log("시작");
   // app.js에 매칭 요청을 보냅니다.
   socket.emit('requestMatch');
+
+  // 매칭 애니메이션 실행 -> 로딩바 돌아감 -> 작업이 끝나면 clearInterval(animation_work)로 종료
   animation_work = setInterval(loading_animation,20);
 }
 
@@ -61,10 +63,6 @@ socket.on('matchSuccess', function(data) {
 socket.on('matchFailed', function() {
   console.log('매칭 실패! 상대방이 없습니다.');
   clearInterval(animation_work);
-  // 여기에 매칭 실패 후 작업을 수행하는 코드를 추가하세요.
-  // 예: 알림 표시, 다른 동작 수행 등
-  
-  // 예시: 알림 표시하기
   alert('매칭 실패! 상대방이 없습니다.');
 });
 
