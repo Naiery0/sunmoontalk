@@ -267,6 +267,50 @@ app.post('/myPage', (req, res) => {
     }
   });
 });
+
+// POST /change-password 요청 처리
+app.post('/change-password', (req, res) => {
+  const id= req.body.id;
+  const newPassword= req.body.newPassword;
+  
+  console.log("받은 아디"+id, "받은 비번"+newPassword);
+
+  // 비밀번호 변경 로직 수행
+  connection.query(
+    'UPDATE userdata SET password = ? WHERE username = ?',
+    [newPassword, id],
+    (error, results) => {
+      if (error) {
+        console.error('비밀번호 변경 실패:', error);
+        res.status(500).send('비밀번호 변경 실패');
+      } else {
+        console.log('비밀번호 변경 성공');
+        res.sendStatus(200);
+      }
+    }
+  );
+});
+
+// POST /change-nickname 요청 처리
+app.post('/change-nickname', (req, res) => {
+  const { id, newNickname } = req.body;
+
+  // 닉네임 변경 로직 수행
+  connection.query(
+    'UPDATE userdata SET nickname = ? WHERE username = ?',
+    [newNickname, id],
+    (error, results) => {
+      if (error) {
+        console.error('닉네임 변경 실패:', error);
+        res.status(500).send('닉네임 변경 실패');
+      } else {
+        console.log('닉네임 변경 성공');
+        res.sendStatus(200);
+      }
+    }
+  );
+});
+
 /*
 // 워드클라우드 데이터 요청에 대한 처리.....형태소 분석이 없는 ver
 app.get('/wordcloud', (req, res) => {
