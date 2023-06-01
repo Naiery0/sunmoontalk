@@ -58,7 +58,7 @@ socket.on('update', function (data) {
         let month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1 필요, 앞에 0을 붙여 2자리로 만듦
         let day = ("0" + date.getDate()).slice(-2); // 일, 앞에 0을 붙여 2자리로 만듦
         let hour = ("0" + date.getHours()).slice(-2);
-        let min = ("0" + date.getMinutes()).slice(-2);
+        let min = ("" + date.getMinutes()).slice(-2); //001~009 뜨는거 이 부분 수정해봤으니 적용되는지 확인해야됨
         let sec = ("0" + date.getSeconds()).slice(-2);
 
         if (hour < 10) hour = "0" + hour;
@@ -99,7 +99,7 @@ function send() {
         let month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1 필요, 앞에 0을 붙여 2자리로 만듦
         let day = ("0" + date.getDate()).slice(-2); // 일, 앞에 0을 붙여 2자리로 만듦
         let hour = ("0" + date.getHours()).slice(-2);
-        let min = ("0" + date.getMinutes()).slice(-2);
+        let min = ("" + date.getMinutes()).slice(-2);
         let sec = ("0" + date.getSeconds()).slice(-2);
 
         if (hour < 10) hour = "0" + hour;
