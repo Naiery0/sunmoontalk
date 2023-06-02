@@ -270,10 +270,10 @@ app.post('/myPage', (req, res) => {
 
 // POST /change-password 요청 처리
 app.post('/change-password', (req, res) => {
-  const id= req.body.id;
-  const newPassword= req.body.newPassword;
-  
-  console.log("받은 아디"+id, "받은 비번"+newPassword);
+  const id = req.body.id;
+  const newPassword = req.body.newPassword;
+
+  console.log("받은 아디" + id, "받은 비번" + newPassword);
 
   // 비밀번호 변경 로직 수행
   connection.query(
@@ -428,23 +428,42 @@ const matchQueue = [];
 // 채팅방들을 저장할 객체
 const chatRooms = {};
 // 채팅방이 로그를 전달했는지
-let logSave = {};
+const logSave = {};
+// 쿠키를 통해 매칭 중 or 채팅 중인지
+let enjoyCookie = [];
 
 //const chatRoomId = getChatRoomId(socket); 하고 socket.to(chatRoomId).emit 로 보내면 채팅방에 보내짐!
 
 io.sockets.on('connection', function (socket) {
+  const cookie = socket.handshake.headers.cookie; // 소켓의 쿠키를 가져옴
   // 매칭 요청을 받았을 때 처리
   socket.on('requestMatch', () => {
     console.log(`${socket.id}이(가) 매칭을 요청했습니다.`);
 
-    // 매칭 대기열에 사용자 추가
-    matchQueue.push(socket);
+    // 사용자의 쿠키가 enjoyCookie 배열에 없는 경우에만 매칭 시도
+    let cookieExists = false;
+    for (const existingCookie of enjoyCookie) {
+      if (existingCookie === cookie) {
+        cookieExists = true;
+        break;
+      }
+    }
+    if (!cookieExists) {
+      // 매칭 대기열에 사용자 추가
+      matchQueue.push(socket);
 
-    // 매칭 시도
-    tryMatch();
+      // 해당 쿠키를 enjoyCookie 배열에 추가
+      enjoyCookie.push(cookie);
 
-    // 매칭 대기 메시지 전송
-    socket.emit('matchWaiting');
+      // 매칭 시도
+      tryMatch();
+
+      // 매칭 대기 메시지 전송
+      socket.emit('matchWaiting');
+    }
+    else {
+      console.log("매칭 거절");
+    }
   });
 
   socket.on('newUser', function (name) {
@@ -463,7 +482,7 @@ io.sockets.on('connection', function (socket) {
 
   // 이부분에서 룸아디를 다시 받아서 해당 방의 정보를 재설정!!
   socket.on('sendRoomId', function (chatRoomId) {
-    logSave[chatRoomId]=0;//로그 보냈나 설정
+    logSave[chatRoomId] = 0;//로그 보냈나 설정
     const chatRoom = chatRooms[chatRoomId];
     if (chatRoom) {
       // 채팅방이 유효한 경우에만 처리합니다.
@@ -494,15 +513,20 @@ io.sockets.on('connection', function (socket) {
   //소켓이 연결을 종료했을 때
   socket.on('disconnect', function () {
     const chatRoomId = getChatRoomId(socket);
-     // 매칭 대기열에서 해당 사용자 제거
-     const queueIndex = matchQueue.findIndex(user => user.id === socket.id);
-     if (queueIndex !== -1) {
-       matchQueue.splice(queueIndex, 1);
-     }
+    // 해당 사용자의 쿠키를 찾아 제거
+    const cookieIndex = enjoyCookie.indexOf(cookie);
+    if (cookieIndex !== -1) {
+      enjoyCookie.splice(cookieIndex, 1);
+    }
+    // 매칭 대기열에서 해당 사용자 제거
+    const queueIndex = matchQueue.findIndex(user => user.id === socket.id);
+    if (queueIndex !== -1) {
+      matchQueue.splice(queueIndex, 1);
+    }
     //로그 요청 
     socket.to(chatRoomId).emit('giveLog');
     console.log(`${socket.id}이(가) 연결을 종료했습니다.`);
-    console.log(socket.name + ' 님이 나가셨습니다.');
+    //console.log(socket.name + ' 님이 나가셨습니다.');
     socket.to(chatRoomId).emit('update', {
       type: 'disconnect',
       name: 'SERVER',
@@ -515,10 +539,10 @@ io.sockets.on('connection', function (socket) {
     if (logSave[chatRoomId] == 0) {
       //로그를 받고
       chatLog.forEach(log => {
-      const {roomid, username, message, sendtime} = log;
-      logdata.query(
-        'INSERT INTO chatlogs (roomid ,username, message, sendtime) VALUES (?, ?, ?, ?)',[log.roomid, log.username, log.message, log.sendtime]);    
-      }); 
+        const { roomid, username, message, sendtime } = log;
+        logdata.query(
+          'INSERT INTO chatlogs (roomid ,username, message, sendtime) VALUES (?, ?, ?, ?)', [log.roomid, log.username, log.message, log.sendtime]);
+      });
       console.log("로그저장 완료");
       logSave[chatRoomId] = 1;
     }
@@ -603,8 +627,8 @@ function generateChatRoomId() {
   let min = ("0" + date.getMinutes()).slice(-2);
   let sec = ("0" + date.getSeconds()).slice(-2);
   const timestamp = `${year}-${month}-${day}/${hour}:${min}:${sec}`
-  console.log("생성된 룸:"+'room_' + Math.random().toString(36).substr(2, 9)+timestamp);
-  return 'room_' + Math.random().toString(36).substr(2, 9)+timestamp;
+  console.log("생성된 룸:" + 'room_' + Math.random().toString(36).substr(2, 9) + timestamp);
+  return 'room_' + Math.random().toString(36).substr(2, 9) + timestamp;
 }
 
 // 랜덤한 인덱스를 생성하는 함수
