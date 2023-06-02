@@ -79,7 +79,7 @@ app.post('/login', (req, res) => {
         res.status(401).json({ message: '로그인에 실패했습니다.' });
       } else {
         // 사용자 정보가 일치할 경우
-        const sessionID = generateSessionID(); // 세션 아이디 생성 함수 호출
+        const sessionID = encryptSessionID(username); // 세션 아이디 생성
         res.cookie('sessionID', sessionID, { httpOnly: false }); // 세션 아이디를 쿠키에 설정 
         res.status(200).json({ message: '로그인에 성공했습니다.', sessionID });
         console.log('응답 전송:', { message: '로그인에 성공했습니다.', sessionID });
@@ -386,13 +386,37 @@ app.get('/wordcloud', (req, res) => {
 function generateSessionID() {
   // 세션 아이디를 생성하는 로직을 구현합니다.
   // 예시: 현재 시간을 기반으로 랜덤한 문자열을 생성하여 사용
-
   const timestamp = new Date().getTime().toString();
   const randomString = Math.random().toString(36).substring(2, 10);
   const sessionID = timestamp + randomString;
 
   return sessionID;
+  // 이건 방 이름 설정하는데 사용하기로 하고 세션id는 아래 함수를 사용
 }
+
+// 사용자 이름을 기반으로 세션 ID를 암호화하는 함수
+function encryptSessionID(username) {
+  const encryptedSessionID = Buffer.from(username).toString('base64');
+  return encryptedSessionID;
+}
+
+// 암호화된 세션 ID를 복호화하는 함수
+/*
+// 암호화된 세션 ID를 복호화하는 함수
+function decryptSessionID(encryptedSessionID) {
+  // 'sessionID=' 부분을 제외한 문자열 추출
+  const encryptedString = encryptedSessionID.replace('sessionID=', '');
+  
+  // Base64 복호화
+  const base64Decoded = atob(encryptedString);
+  
+  // UTF-8 디코딩
+  const decoder = new TextDecoder('utf-8');
+  const decryptedSessionID = decoder.decode(new Uint8Array([...base64Decoded].map((c) => c.charCodeAt(0))));
+
+  return decryptedSessionID;
+}
+*/
 
 
 const server = http.createServer(app);

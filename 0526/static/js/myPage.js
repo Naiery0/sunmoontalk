@@ -1,4 +1,3 @@
-
 const id = document.getElementById("id");
 const pw = document.getElementById("pw");
 const email = document.getElementById("email");
@@ -28,16 +27,8 @@ let userid;
 let userpw;
 function displayInfo() {
     //const sessionID = getCookieValue("sessionID");
-    const username = localStorage.getItem('username');
-    /*
-    for (let i = 0; i < sessionID.length; i++) {
-        if (i > 12) {
-            let temp = sessionID.charCodeAt(i);
-            temp = temp - 2;
-                username += String.fromCharCode(temp);
-        }
-    }*/
-
+    //const username = sessionStorage.getItem('username');
+    const username = decryptSessionID(document.cookie);
     console.log("로그인한 회원의 아이디 : " + username);
 
 
@@ -79,7 +70,12 @@ function displayInfo() {
 }
 displayInfo();
 
-//취소하기버튼 추가해야 될 듯
+ //조건문 부여해서 조건이 만족할 때만 성공하게끔 해야함 
+ //닉네임 특수기호 제한 기타 등등
+ //회원가입때와 동일하게+기존 비번(userpw라고 위에 만들어둠)과 같으면 안됨
+ //지금은 비번만 치고 저장하면 뚱땅끝나버리는데
+ //비번 확인란까지 나타나게 해야됨
+ //취소하기버튼 나타나게 추가해야 될 듯
 function changePW() {
     var changeBtn = document.createElement("input");
     changeBtn.setAttribute("class", "btn save pw");
@@ -100,10 +96,6 @@ function changePW() {
 }
 
 function savePW() {
- //조건문 부여해서 조건이 만족할 때만 성공하게끔 해야함 //회원가입때와 동일하게+기존 비번(userpw라고 위에 만들어둠)과 같으면 안됨
- //그리고 너무 허접하니 다듬을 필요가 있음
- //예를 들어 지금은 비번만 치고 저장하면 뚱땅끝나버리는데
- //비번 확인란까지 나타나게 해야됨
     var newPassword = document.getElementById("newPw").value;
 
     // 서버로 비밀번호 정보 전송
@@ -212,3 +204,13 @@ function saveNick() {
       console.error("Error:", error);
     });
 }
+
+function decryptSessionID(encryptedSessionID) {
+    const encryptedString = encryptedSessionID.replace('sessionID=', '');
+    const base64Decoded = atob(encryptedString);
+    const decoder = new TextDecoder('utf-8');
+    const decryptedSessionID = decoder.decode(new Uint8Array([...base64Decoded].map((c) => c.charCodeAt(0))));
+  
+    return decryptedSessionID;
+  }
+  

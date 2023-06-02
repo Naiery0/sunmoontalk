@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
     const notice = document.getElementById("notice");
-    let localusername;
+    //let localusername;
+
     if (loginForm) {
         loginForm.addEventListener('submit', (event) => {
             event.preventDefault(); // 폼 기본 동작 방지
@@ -29,8 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then((data) => {
 
-                    localusername=username;
-                    localStorage.setItem('username',localusername); //클라에 유저넴 저장
+                    //localusername=username;
+                    //sessionStorage.setItem('username',localusername); //클라에 유저넴 저장
+                    //window.username=username; 폐기
 
                     console.log("서버가 준 데이타:" + data.message);
                     // 로그인 요청의 응답을 처리합니다.

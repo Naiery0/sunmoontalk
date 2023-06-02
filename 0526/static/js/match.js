@@ -48,8 +48,8 @@ socket.on('matchSuccess', function(data) {
   const chatRoomId = data.chatRoomId;
   const matchedUser = data.matchedUser;
   clearInterval(animation_work);
-  console.log(`매칭 성공! 채팅방 ID: ${chatRoomId}`);
-  console.log(`상대방 정보 - ID: ${matchedUser.id}, 이름: ${matchedUser.name}`);
+  //console.log(`매칭 성공! 채팅방 ID: ${chatRoomId}`);
+  //console.log(`상대방 정보 - ID: ${matchedUser.id}, 이름: ${matchedUser.name}`);
   
   // 채팅방 페이지로 이동합니다.
   const chatPageUrl = `../html/chat.html?room=${chatRoomId}`;
