@@ -12,7 +12,7 @@ let chatRoomId;
 socket.on('connect', function () {
     let name = "익명";
     //이부분에서 match.js에서 보내준 chatRoomId를 받아서
-    chatRoomId = sessionStorage.getItem('roomid');
+    chatRoomId = localStorage.getItem('roomid');
     console.log("match에서 가져온 룸아디: ", chatRoomId);
     //서버에 새로운 유저가 왔다 알림
     //이부분에서 chatRoomId를 서버로 보낸다.
