@@ -70,29 +70,30 @@ function displayInfo() {
 }
 displayInfo();
 
- //조건문 부여해서 조건이 만족할 때만 성공하게끔 해야함 
- //닉네임 특수기호 제한 기타 등등
- //회원가입때와 동일하게+기존 비번(userpw라고 위에 만들어둠)과 같으면 안됨
- //취소하기버튼 나타나게 추가해야 될 듯
+
+ /*변경하기 버튼을 눌렀을 때는 각각 changePW, changeNick가 실행됨
+   저장하기 버튼을 눌렀을 때 savePW, saveNick이 실행됨. (여기엔 글자수 검사같은 조건문도 포함)
+ */
+
  function changePW() {
-    var changeBtn = document.createElement("input");
+    var changeBtn = document.createElement("input"); //저장하기 버튼 생성
     changeBtn.setAttribute("class", "btn save pw");
     changeBtn.setAttribute("type", "button");
     changeBtn.setAttribute("value", "저장하기");
     changeBtn.setAttribute("onclick", "savePW()");
 
     var pwLabel = document.getElementById("pw");
-    var pwInput = document.createElement("input");
+    var pwInput = document.createElement("input"); //비번 입력란 생성
     pwInput.setAttribute("class", "inputField");
     pwInput.setAttribute("type", "password");
     pwInput.setAttribute("id", "newPw");
-    pwInput.setAttribute("placeholder", "새 비밀번호 입력"); // 힌트 텍스트 추가
+    pwInput.setAttribute("placeholder", "새 비밀번호 입력"); 
 
-    var pwConfirmInput = document.createElement("input"); // 비밀번호 확인 입력란 추가
+    var pwConfirmInput = document.createElement("input"); // 비밀번호 확인 입력란 생성
     pwConfirmInput.setAttribute("class", "inputField");
     pwConfirmInput.setAttribute("type", "password");
     pwConfirmInput.setAttribute("id", "newPwConfirm");
-    pwConfirmInput.setAttribute("placeholder", "새 비밀번호 확인"); // 힌트 텍스트 추가
+    pwConfirmInput.setAttribute("placeholder", "새 비밀번호 확인"); 
 
     var wrap = document.getElementsByClassName("wrap")[0];
 
@@ -128,7 +129,7 @@ function savePW() {
         .then(function (response) {
             // 서버 응답 처리
             if (response.ok) {
-                // 비밀번호 변경 성공
+                // 비밀번호 변경 성공 -> 초기 상태로 돌아감
                 var changeBtn = document.createElement("input");
                 changeBtn.setAttribute("class", "btn pw");
                 changeBtn.setAttribute("type", "button");
@@ -162,16 +163,14 @@ function savePW() {
 }
 
 
-
-
 function changeNick() {
-    var changeBtn = document.createElement("input");
+    var changeBtn = document.createElement("input"); //저장하기 버튼 생성
     changeBtn.setAttribute("class", "btn save nick");
     changeBtn.setAttribute("type", "button");
     changeBtn.setAttribute("value", "저장하기");
     changeBtn.setAttribute("onclick", "saveNick()");
 
-    var nicknameLabel = document.getElementById("nickname");
+    var nicknameLabel = document.getElementById("nickname"); //닉네임 입력란 생성
     var nicknameInput = document.createElement("input");
     nicknameInput.setAttribute("class", "inputField");
     nicknameInput.setAttribute("type", "text");
@@ -211,7 +210,7 @@ function saveNick() {
         .then(function (response) {
             // 서버 응답 처리
             if (response.ok) {
-                // 닉네임 변경 성공
+                // 닉네임 변경 성공 -> 초기상태로 돌아감
                 var changeBtn = document.createElement("input");
                 changeBtn.setAttribute("class", "btn nick");
                 changeBtn.setAttribute("type", "button");
