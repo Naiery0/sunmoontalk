@@ -450,7 +450,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('newUser', function (name) {
     console.log(name + ' 님이 접속하였습니다요~.');
     socket.name = name;
-    console.log(name + '이라고 저장은 했다요~');
+    //console.log(name + '이라고 저장은 했다요~');
     /*io.sockets.emit('update', {
       type: 'connect',
       name: 'SERVER',
@@ -492,10 +492,13 @@ io.sockets.on('connection', function (socket) {
 
   });
   //소켓이 연결을 종료했을 때
-  //메시지를 보낼 때마다 로그를 저장하기엔 서버가 할 일이 많으니 이때 하도록 하자 
-  //로그를 저장했나 안했나
   socket.on('disconnect', function () {
     const chatRoomId = getChatRoomId(socket);
+     // 매칭 대기열에서 해당 사용자 제거
+     const queueIndex = matchQueue.findIndex(user => user.id === socket.id);
+     if (queueIndex !== -1) {
+       matchQueue.splice(queueIndex, 1);
+     }
     //로그 요청 
     socket.to(chatRoomId).emit('giveLog');
     console.log(`${socket.id}이(가) 연결을 종료했습니다.`);
@@ -505,12 +508,11 @@ io.sockets.on('connection', function (socket) {
       name: 'SERVER',
       message: /*socket.name +*/ '상대방이 채팅을 종료했습니다.',
     });
-
   });
   //채팅 로그저장
   socket.on('log', function (chatLog) {
     const chatRoomId = getChatRoomId(socket);
-    if (logSave[chatRoomId] == 0) { //
+    if (logSave[chatRoomId] == 0) {
       //로그를 받고
       chatLog.forEach(log => {
       const {roomid, username, message, sendtime} = log;
