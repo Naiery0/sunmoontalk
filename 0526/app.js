@@ -364,6 +364,7 @@ function isOnlyConsonantsOrVowels(word) {
 }*/
 
 // 워드클라우드 데이터 요청에 대한 처리
+/*
 app.get('/wordcloud', (req, res) => {
   exec('python wordCloud.py', (error, stdout, stderr) => {
     if (error) {
@@ -380,6 +381,39 @@ app.get('/wordcloud', (req, res) => {
       res.status(500).json({ error: '데이터 파싱에 실패했습니다.' });
     }
   });
+});*/
+
+//딜레이를 줄이기 위한 몸부림
+let cachedWordCounts = null; // 캐시된 워드클라우드 데이터
+
+// 10분마다 워드클라우드 데이터 생성 및 캐싱할 함수
+function generateAndCacheWordCloudData() {
+  // 워드클라우드 데이터 생성 로직 (파이썬 스크립트 실행 등)
+  exec('python wordCloud.py', (error, stdout, stderr) => {
+    if (error) {
+      console.error('파이썬 스크립트 실행 에러:', error);
+      return;
+    }
+
+    try {
+      cachedWordCounts = JSON.parse(stdout);
+      console.log('워드클라우드 데이터 캐싱 완료');
+    } catch (parseError) {
+      console.error('JSON 파싱 에러:', parseError);
+    }
+  });
+}
+
+// 10분마다 워드클라우드 데이터 생성 및 캐싱 실행
+setInterval(generateAndCacheWordCloudData, 10 * 60 * 1000);
+
+// 워드클라우드 데이터 요청에 대한 처리
+app.get('/wordcloud', (req, res) => {
+  if (cachedWordCounts) {
+    res.json({ wordCounts: cachedWordCounts });
+  } else {
+    res.status(404).json({ error: '워드클라우드 데이터를 찾을 수 없습니다.' });
+  }
 });
 
 
@@ -653,5 +687,6 @@ function getChatRoomId(socket) {
 }
 
 server.listen(80, () => {
+  generateAndCacheWordCloudData();
   console.log('Server is listening on port 80');
 });
