@@ -385,7 +385,8 @@ app.get('/wordcloud', (req, res) => {
 
 //딜레이를 줄이기 위한 몸부림
 let cachedWordCounts = null; // 캐시된 워드클라우드 데이터
-
+let serverTime = 0;
+const reSearchTime = 10; //워드클라우드 캐싱 시간 설정(분 단위)
 // 10분마다 워드클라우드 데이터 생성 및 캐싱할 함수
 function generateAndCacheWordCloudData() {
   // 워드클라우드 데이터 생성 로직 (파이썬 스크립트 실행 등)
@@ -402,11 +403,12 @@ function generateAndCacheWordCloudData() {
       console.error('JSON 파싱 에러:', parseError);
     }
   });
-  console.log("워드클라우드 데이터를 불러왔습니다.");
+  servertime= servertime+reSearchTime;
+  console.log("서버 가동 "+serverTime+"분 경과");
 }
 
 // 10분마다 워드클라우드 데이터 생성 및 캐싱 실행
-setInterval(generateAndCacheWordCloudData, 10 * 60 * 1000);
+setInterval(generateAndCacheWordCloudData, reSearchTime * 60 * 1000);
 
 // 워드클라우드 데이터 요청에 대한 처리
 app.get('/wordcloud', (req, res) => {
