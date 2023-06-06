@@ -6,7 +6,7 @@ sendVerificationButton.addEventListener('click', sendFindAccount);
 function sendFindAccount(event) {
   event.preventDefault();
 
-  const email = document.getElementById("findEmail").value;
+  const email = escapeHTML(document.getElementById("findEmail").value);
 
   if (email !== "" && email !== null) {
     const formData = new URLSearchParams();
@@ -36,3 +36,9 @@ addEventListener('keydown', (event) => {
     sendFindAccount();
   }
 });
+
+function escapeHTML(text) {
+  let element = document.createElement('div');
+  element.innerText = text;
+  return element.innerHTML;
+}
