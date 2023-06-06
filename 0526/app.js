@@ -403,8 +403,8 @@ function generateAndCacheWordCloudData() {
       console.error('JSON 파싱 에러:', parseError);
     }
   });
-  servertime= servertime+reSearchTime;
   console.log("서버 가동 "+serverTime+"분 경과");
+  serverTime= serverTime+reSearchTime;
 }
 
 // 10분마다 워드클라우드 데이터 생성 및 캐싱 실행
