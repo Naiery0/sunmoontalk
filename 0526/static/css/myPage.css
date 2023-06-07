@@ -20,7 +20,7 @@
     display: inline-block;
     font-weight: bold;
     font-size:1.3em;
-    width:80%;
+    width:75%;
     height:5%;
     margin-top:2em;
     margin-left:3em;
@@ -44,7 +44,7 @@
     font-size:1.2em;
     width:6em;
     height:1.8em;
-    right:10%;
+    right:0%;
     cursor:pointer;
     transition:all ease 0.2s;
     font-family: SUNMOON;
@@ -52,8 +52,60 @@
 .btn:hover{
     background-color: gray;
 }
+.row{
+    position: absolute;
+    right:18.5%;
+    top:11em;
+    width:23.5%;  
+    text-align: right;
+}
+.cancel{
+    display: none;
+}
+.wrap .row:nth-last-of-type(1){
+    top:25em;
+}
 .logout{
     position:absolute;
     top:0em;
     right:6.5em;
+}
+
+[type="checkbox"] {
+    appearance: none;
+}
+
+[type="checkbox"] {
+    appearance: none;
+    position: relative;
+    border: max(2px, 0.1em) solid gray;
+    border-radius: 1.25em;
+    width: 2.25em;
+    height: 1.25em;
+}
+
+[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    transform: scale(0.8);
+    background-color: gray;
+    transition: left 250ms linear;
+}
+
+[type="checkbox"]:checked::before {
+    background-color: white;
+    left: 1em;
+}
+
+[type="checkbox"]:checked {
+    background-color: gray;
+    border-color: gray;
+}
+#togglebtn{
+    font-size: 1.1em;
+    cursor:pointer;
 }

@@ -10,16 +10,31 @@
     <div class="wrap">
         <div class="myPageLogo">내정보</div>
         <input class="btn logout" type="button" value="로그아웃" onclick="LogOut()">
+
         <span class="label">아이디</span>
         <span class="label2" id="id">아이디정보</span>
+
         <span class="label">비밀번호</span>
-        <input class="btn pw" type="button" value="변경하기" onclick="changePW()">
+        <div class="row">
+            <input class="btn cancel pw" type="button" value="취소" onclick="changeCancelPW()">
+            <input class="btn pw" type="button" value="변경하기" onclick="changePW()">
+        </div>
         <span class="label2" id="pw">비밀번호정보</span>
+
         <span class="label">이메일정보</span>
         <span class="label2" id="email">이메일정보</span>
+
         <span class="label">닉네임정보</span>
-        <input class="btn nick" type="button" value="변경하기" onclick="changeNick()">
+        <div class="row">
+            <input class="btn cancel nick" type="button" value="취소" onclick="changeCancelNick()">
+            <input class="btn nick" type="button" value="변경하기" onclick="changeNick()">
+        </div>
         <span class="label2" id="nickname">닉네임정보</span>
+        
+        <span class="label">다크모드</span>
+        <label class="label2">
+            <input id="togglebtn" role="switch" type="checkbox" onclick="DarkMode()"/>
+        </label>
     </div>
     <script src="../js/myPage.js"></script>
 </body>
