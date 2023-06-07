@@ -7,13 +7,16 @@ const http = require('http');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
 const { exec } = require('child_process');
-
+const Filter = require('badwords-ko');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const mailInfo = require('./mailInfo');
 const mailfrom = '@naver.com'; //자기 네이버 메일
+
+const filter = new Filter();
+//console.log(filter.clean("욕을 합니다 개새끼")); ==> 욕을 합니다 *** 로 출력
 
 const connection = mysql.createConnection({
   host: 'localhost',
