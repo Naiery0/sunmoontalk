@@ -2,7 +2,6 @@ const id = document.getElementById("id");
 const pw = document.getElementById("pw");
 const email = document.getElementById("email");
 const nickname = document.getElementById("nickname");
-
 function LogOut() {
     document.cookie = "sessionID" + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     alert("로그아웃 되었습니다");
@@ -99,12 +98,12 @@ function changePW() {
 
     var wrap = document.getElementsByClassName("wrap")[0];
 
-    var cancelBtn = document.getElementsByClassName("btn cancel pw")[0];
-    cancelBtn.style.display = "block";
+    //var cancelBtn = document.getElementsByClassName("btn cancel pw")[0];
+    //cancelBtn.style.display = "block";
 
-    wrap.replaceChild(changeBtn, document.getElementsByClassName("btn pw")[0]);
     wrap.replaceChild(pwInput, pwLabel);
     wrap.insertBefore(pwConfirmInput, pwInput.nextSibling); // 비밀번호 확인 입력란 삽입
+    wrap.replaceChild(changeBtn, document.getElementsByClassName("btn pw")[0]);
 }
 
 function savePW() {
@@ -206,8 +205,8 @@ function changeNick() {
     nicknameInput.setAttribute("id", "newNickname");
     nicknameInput.setAttribute("placeholder", "새 닉네임 입력");
 
-    var cancelBtn = document.getElementsByClassName("btn cancel nick")[0];
-    cancelBtn.style.display = "block";
+    //var cancelBtn = document.getElementsByClassName("btn cancel nick")[0];
+    //cancelBtn.style.display = "block";
 
     var wrap = document.getElementsByClassName("wrap")[0];
 
@@ -226,10 +225,11 @@ function saveNick() {
         return;
     }
     // 2자 이상, 8자 이하
-    if (newNickname.length < 2 || newNickname.length > 8) {
+    else if (newNickname.length < 2 || newNickname.length > 8) {
         alert("닉네임은 2자 이상 8자 이하로 입력해야 합니다.");
         return;
     }
+
 
     // 서버로 닉네임 정보 전송
     fetch("/change-nickname", {
@@ -242,7 +242,11 @@ function saveNick() {
     })
         .then(function (response) {
             // 서버 응답 처리
-            if (response.ok) {
+            if (response.status == 400) {
+                alert('사용할 수 없는 닉네임입니다.');
+                return;
+            }
+            else if (response.ok) {
                 // 닉네임 변경 성공 -> 초기상태로 돌아감
                 var changeBtn = document.createElement("input");
                 changeBtn.setAttribute("class", "btn nick");

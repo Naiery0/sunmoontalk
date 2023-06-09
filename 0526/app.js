@@ -297,21 +297,25 @@ app.post('/change-password', (req, res) => {
 // POST /change-nickname 요청 처리
 app.post('/change-nickname', (req, res) => {
   const { id, newNickname } = req.body;
-
-  // 닉네임 변경 로직 수행
-  connection.query(
-    'UPDATE userdata SET nickname = ? WHERE username = ?',
-    [newNickname, id],
-    (error, results) => {
-      if (error) {
-        console.error('닉네임 변경 실패:', error);
-        res.status(500).send('닉네임 변경 실패');
-      } else {
-        console.log('닉네임 변경 성공');
-        res.sendStatus(200);
+  if ((filter.clean(newNickname)).includes('*')) { //닉네임 욕설감지
+    res.sendStatus(400);
+  }
+  else {
+    // 닉네임 변경 로직 수행
+    connection.query(
+      'UPDATE userdata SET nickname = ? WHERE username = ?',
+      [newNickname, id],
+      (error, results) => {
+        if (error) {
+          console.error('닉네임 변경 실패:', error);
+          res.status(500).send('닉네임 변경 실패');
+        } else {
+          console.log('닉네임 변경 성공');
+          res.sendStatus(200);
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 /*
