@@ -31,7 +31,7 @@
         list: topKeywords,
         //list: Object.entries(wordCounts)
         gridSize: 10,
-        weightFactor: 5,
+        weightFactor: 15,
         fontFamily: 'omyu_pretty', 
         color: 'random-dark',
         rotateRatio: 0.5,
