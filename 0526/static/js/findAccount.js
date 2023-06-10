@@ -22,6 +22,7 @@ function sendFindAccount(event) {
       .then(response => response.json())
       .then(data => {
         alert("이메일을 전송하였습니다!");
+        window.parent.location.href = "../html/login.html";
       })
       .catch(error => {
         console.error("Error:", error);
