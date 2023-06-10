@@ -52,15 +52,8 @@
 .btn:hover{
     background-color: gray;
 }
-.row{
-    position: absolute;
-    right:18.5%;
-    top:11em;
-    width:23.5%;  
-    text-align: right;
-}
-.cancel{
-    display: none;
+.nick,.pw{
+    right:6.25em;
 }
 .wrap .row:nth-last-of-type(1){
     top:25em;
@@ -108,4 +101,22 @@
 #togglebtn{
     font-size: 1.1em;
     cursor:pointer;
+}
+#newPw,#newPwConfirm,#newNickname{
+    position: relative;
+    font-family: SUNMOON;
+    font-size:1.1em;
+    padding-left:0.5em;
+    padding-bottom: 0.25em;
+    width:10em;
+    margin-left: 2em;
+    border: none;
+    border-bottom: 1px solid lightgray;
+    margin-top:1em;
+}
+#newPw,#newNickname{
+    margin-left: 5em;
+}
+#newPw:focus,#newPwConfirm:focus,#newNickname:focus{
+    outline: none;
 }

@@ -1,7 +1,19 @@
 html {
     font-family: "omyu_pretty";
 }
-
+:root{
+    --background-color: aliceblue; /* 기본 배경 색상 */
+    --chatmine : yellow;
+    --chatother : white;
+    --chatoutput : black;
+    --chatnotice : gray;
+}
+.root.darkmode{
+    --background-color: #4c4c4c; /* 기본 배경 색상 */
+    --chatmine : #007bff;
+    --chatother : #f1f1f1;
+    --chatnotice : white;
+}
 #chat_Input {
     position: absolute;
     border: none;
@@ -30,7 +42,7 @@ html {
 
     overflow-y: auto;
     overflow-x: hidden;
-    background-color: aliceblue;
+    background-color: var(--background-color);
     border-radius: 30px;
     display: flex;
     flex-direction: column;
@@ -56,29 +68,6 @@ html {
 .chat_message_wrap .chat_message_other{
     margin-left: 1em;
 }
-/*
-.chat{
-    position:absolute;
-    font-size:1.5em;
-    background-color: white;
-    border-radius: 10px;
-    text-align: left;
-    max-width: 80%;
-
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding-left : 0.5em;
-    padding-right : 0.5em;
-    line-height:1.5;
-    box-sizing: border-box; 
-    display:inline;
-    bottom:0;
-    white-space:normal;
-}
-*/
-.chat{
-    white-space: break-spaces;
-    word-break: break-all;
-}
 .chat_message_mine {
     position:relative;
     display: flex;
@@ -90,23 +79,25 @@ html {
 .chat_message_mine::before {
     content:'';
     position:absolute;
-    background-color: yellow;
+    background-color: var(--chatmine);
 
     font-size:1em;
     width:0.7em;
     height:0.7em;
-    right:-0.7em;
+    right:-0.65em;
     top:1.2em;
     clip-path: polygon(100% 50%, 0 0, 0 100%);
 }
 
 .chat_message_mine .chat_output {
-    background-color: yellow;
-    color: black;
+    background-color: var(--chatmine);
+    color: var(--chatoutput);
     padding: 0.5em;
     border-radius: 15px;
     max-width: 70%;
     font-size: 1.5em;
+    white-space: break-spaces;
+    word-break: break-all;
 }
 
 .chat_message_mine .chat_time {
@@ -127,23 +118,25 @@ html {
 .chat_message_other::before {
     content: '';
     position: absolute;
-    background-color: white;
+    background-color: var(--chatother);
 
     font-size: 1em;
     width: 0.7em;
     height: 0.7em;
-    left: -0.7em;
+    left: -0.65em;
     top: 1.2em;
     clip-path: polygon(0 50%, 100% 0, 100% 100%);
 }
 
 .chat_message_other .chat_output {
-    background-color: white;
-    color: black;
+    background-color: var(--chatother);
+    color: var(--chatoutput);
     padding: 0.5em;
     border-radius: 15px;
     max-width: 70%;
     font-size: 1.5em;
+    white-space: break-spaces;
+    word-break: break-all;
 }
 
 .chat_message_other .chat_time {
@@ -160,3 +153,22 @@ html {
     left: 1em;
     top: 0.15em;
 }
+
+.darkmode {
+    --background-color: #4c4c4c;
+    --chatmine: #007bff;
+    --chatother: #f1f1f1;
+    --chatoutput: white;
+  }
+  .darkmode #chatLog {
+    background-color: var(--background-color);
+  }
+  
+  .darkmode .chat_message_mine .chat_output {
+    background-color: var(--chatmine);
+  }
+  
+  .darkmode .chat_message_other .chat_output {
+    background-color: var(--chatother);
+    color: black;
+  } 

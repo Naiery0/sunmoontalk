@@ -163,3 +163,22 @@ function decryptSessionID(encryptedSessionID) {
 
     return decryptedSessionID;
 }
+
+function darkmode() {
+    const isDarked = sessionStorage.getItem("darkmode");
+    if (isDarked) {
+        console.log("다크모드 활성화!");    
+        const chatLog = document.getElementById('chatLog');
+        chatLog.classList.toggle('darkmode');
+
+        const root = document.documentElement;
+        root.classList.add('darkmode'); // 다크 모드 클래스 추가
+    }
+    else{
+        console.log("다크모드 해제!");
+        const root = document.documentElement;
+        root.classList.remove('darkmode'); // 다크 모드 클래스 제거
+    }
+}
+// 페이지 로드가 완료된 후 darkmode() 함수 호출
+window.addEventListener('load', darkmode);
