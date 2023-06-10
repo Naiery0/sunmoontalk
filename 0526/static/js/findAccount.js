@@ -19,7 +19,6 @@ function sendFindAccount(event) {
       },
       body: formData.toString()
     })
-      .then(response => response.json())
       .then(function (response) {
         // 서버 응답 처리
         if (response.status == 404) {
