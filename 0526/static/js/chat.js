@@ -9,17 +9,18 @@ let chatLogs=[];
 let chatRoomId;
 // 메세지 수신함수
 socket.on('connect', function () {
-    const name = decryptSessionID(document.cookie);
+    const name = decryptSessionID(document.cookie); 
     //이부분에서 match.js에서 보내준 chatRoomId를 받아서
     chatRoomId = localStorage.getItem('roomid');
     //서버에 새로운 유저가 왔다 알림
     //이부분에서 chatRoomId를 서버로 보낸다.
     //서버가 받으면 수신한 소켓에게 chatRoomId를 부여한다.
     socket.emit('sendRoomId', chatRoomId);
-    socket.emit('newUser', name);
+    socket.emit('newUser', name); //사실 여기서 보내는 이름은 id임
 })
 
-socket.on('welcome',function (name) {
+//입장 시 상대방 이름 통보
+socket.on('welcome',function (name) { //여기서 받는게 닉네임
     chatLog.innerHTML +=
     "<span class='chat_message_wrap'>"
     + "<span class='chat_notice'>"

@@ -295,26 +295,61 @@ app.post('/change-password', (req, res) => {
 // POST /change-nickname 요청 처리
 app.post('/change-nickname', (req, res) => {
   const { id, newNickname } = req.body;
-  if ((filter.clean(newNickname)).includes('*')) { //닉네임 욕설감지
+
+  if ((filter.clean(newNickname)).includes('*')) {
+    // 욕설이 포함된 닉네임은 허용하지 않음
     res.sendStatus(400);
-  }
-  else {
-    // 닉네임 변경 로직 수행
-    connection.query(
-      'UPDATE userdata SET nickname = ? WHERE username = ?',
-      [newNickname, id],
-      (error, results) => {
-        if (error) {
-          console.error('닉네임 변경 실패:', error);
-          res.status(500).send('닉네임 변경 실패');
-        } else {
-          //console.log('닉네임 변경 성공');
-          res.sendStatus(200);
+  } else {
+    if (newNickname !== '익명') {
+      // 닉네임 중복 체크
+      connection.query(
+        'SELECT COUNT(*) AS count FROM userdata WHERE nickname = ?',
+        [newNickname],
+        (error, results) => {
+          if (error) {
+            console.error('닉네임 중복 체크 실패:', error);
+            res.status(500).send('닉네임 중복 체크 실패');
+          } else {
+            const count = results[0].count;
+            if (count > 0) {
+              // 닉네임이 이미 사용 중인 경우
+              res.sendStatus(409);
+            } else {
+              // 닉네임 변경 로직 수행
+              connection.query(
+                'UPDATE userdata SET nickname = ? WHERE username = ?',
+                [newNickname, id],
+                (error, results) => {
+                  if (error) {
+                    console.error('닉네임 변경 실패:', error);
+                    res.status(500).send('닉네임 변경 실패');
+                  } else {
+                    res.sendStatus(200); // 닉네임 변경 성공
+                  }
+                }
+              );
+            }
+          }
         }
-      }
-    );
+      );
+    } else {
+      // '익명' 닉네임은 중복 체크 없이 변경 허용
+      connection.query(
+        'UPDATE userdata SET nickname = ? WHERE username = ?',
+        [newNickname, id],
+        (error, results) => {
+          if (error) {
+            console.error('닉네임 변경 실패:', error);
+            res.status(500).send('닉네임 변경 실패');
+          } else {
+            res.sendStatus(200); // 닉네임 변경 성공
+          }
+        }
+      );
+    }
   }
 });
+
 
 /*
 // 워드클라우드 데이터 요청에 대한 처리.....형태소 분석이 없는 ver
@@ -507,18 +542,27 @@ io.sockets.on('connection', function (socket) {
       //console.log("매칭 거절");
     }
   });
-
+  
   socket.on('newUser', function (name) {
-    console.log(name + ' 님이 접속하였습니다요~.');
     socket.name = name;
-    console.log(name + '이라고 저장은 했다요~');
-    /*io.sockets.emit('update', {
-      type: 'connect',
-      name: 'SERVER',
-      message: name + '님이 접속하였습니다.',
-    });*/
-    const chatRoomId = getChatRoomId(socket);
-    socket.to(chatRoomId).emit('welcome',name); 
+
+    // 데이터베이스 쿼리 실행
+    const query = `SELECT nickname FROM userdata WHERE username = ?`;
+    connection.query(query, [name], (error, results) => {
+      if (error) {
+        console.error('데이터베이스 조회 에러:', error);
+        return;
+      }
+
+      if (results.length > 0) {
+        const userInfo = results[0];
+        const nickname = userInfo.nickname;
+
+        // 'welcome' 이벤트와 함께 nickname 전송
+        const chatRoomId = getChatRoomId(socket);
+        socket.to(chatRoomId).emit('welcome', nickname);
+      }
+    });
 
     // 사용자 배열에 추가
     users.push(socket);

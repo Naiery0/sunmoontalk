@@ -226,6 +226,9 @@ function saveNick() {
                 alert('사용할 수 없는 닉네임입니다.');
                 return;
             }
+            else if (response.status == 409){
+                alert('이미 존재하는 닉네임입니다. 익명 닉네임은 중복 가능합니다.')
+            }
             else if (response.ok) {
                 // 닉네임 변경 성공 -> 초기상태로 돌아감
                 var changeBtn = document.createElement("input");
