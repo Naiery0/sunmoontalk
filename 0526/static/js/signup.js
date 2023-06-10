@@ -53,9 +53,9 @@ function sendVerificationCode(event) {
     //const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@mail\.sunmoon\.ac\.kr$/;
 
-    const checkEmail = email.indexOf("@");
+    const checkEmailUse = email.indexOf("@");
 
-    if (checkEmail !== -1) {
+    if (checkEmailUse !== -1) {
       // 입력된 값이 올바른 이메일 형식인지 확인하는 함수
       function validateEmail(emailValue) {
         if (!(emailRegex.test(emailValue))) {
@@ -99,6 +99,7 @@ function sendVerificationCode(event) {
           }
         })
         .catch(error => {
+          console.log("알수없는에러");
           console.error("Error:", error);
         });
     }
@@ -215,6 +216,7 @@ function checkInfo(event) {
     noticeID.style.display = 'inline';
     noticeID.innerText = "아이디 중복을 확인해주세요";
     noticeID.style.color = 'RGB(214,0,63)';
+    flag = 1;
   }
   else{
     noticeID.style.display = 'none';
@@ -300,7 +302,7 @@ function changeEmail(){
   let previousValue = emailInput.dataset.previousValue || "";
   let currentValue = emailInput.value;
 
-  if (previousValue !== currentValue) {
+  if (previousValue !== currentValue&&checkEmail==1) {
     // 이전 값과 현재 값이 다르면 이벤트를 발생시킴
     emailInput.dataset.previousValue = currentValue;
     checkEmail = 0;

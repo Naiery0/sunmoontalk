@@ -41,18 +41,18 @@ chatLobby.addEventListener('click', function(event) {
   }
 });
 
-// 매칭 성공 응답을 처리하는 이벤트 핸들러를 등록합니다.
+// 매칭 성공 응답을 처리하는 이벤트 핸들러를 등록
 socket.on('matchSuccess', function(data) {
   const chatRoomId = data.chatRoomId;
   const matchedUser = data.matchedUser;
   clearInterval(animation_work);
-  // 채팅방 페이지로 이동합니다.
+  // 채팅방 페이지로 이동
   const chatPageUrl = `../html/chat.html?room=${chatRoomId}`;
   localStorage.setItem('roomid', chatRoomId); 
   window.location.href = chatPageUrl;
 });
 
-// 매칭 실패 응답을 처리하는 이벤트 핸들러를 등록합니다.
+// 매칭 실패 응답을 처리하는 이벤트 핸들러를 등록
 socket.on('matchFailed', function() {
   clearInterval(animation_work);
   alert('매칭 실패! 상대방이 없습니다.');

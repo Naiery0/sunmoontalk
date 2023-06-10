@@ -16,7 +16,7 @@ function displayInfo() {
     const username = decryptSessionID(document.cookie);
 
 
-    // 서버로 로그인 요청을 보냅니다.
+    // 서버로 로그인 요청
     fetch('/myPage', {
         method: 'POST',
         headers: {
@@ -45,7 +45,7 @@ function displayInfo() {
             nickname.innerText = data.nickname;
         })
         .catch((error) => {
-            // 에러 발생 시 처리할 내용을 작성하세요.
+            // 에러 발생 시 처리할 내용
             console.error('내정보 요청 에러', error);
         });
 }

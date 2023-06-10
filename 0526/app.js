@@ -159,7 +159,8 @@ const sendMail = (req, res, email) => {
     if (error) {
       console.log(error);
       res.status(500).json({ message: '이메일 전송에 실패했습니다.' });
-    } else {
+    } 
+    else {
       console.log('Email sent: ' + info.response);
       const exists = false;
       res.status(200).json({ message: '이메일이 성공적으로 전송되었습니다.', code: mailCode, exists: exists });
