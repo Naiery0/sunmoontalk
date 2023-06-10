@@ -10,7 +10,7 @@ html{
   left:0.3em;
   top:0.2em;
 
-  display: none;
+  display: block;
 }
 #chatMain{
   position:absolute;
@@ -22,6 +22,7 @@ html{
   color:white;
   z-index:10;
 
+  overflow: hidden;
   display:block;
 }
 .btn{
@@ -52,6 +53,21 @@ html{
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  transition: all ease 1s;
+}
+#chatStat{
+  position: absolute;
+  width:100%;
+  height:100%;
+  left:-0.17em;
+  top:-0.13em;
+  display:none; /* flex */
+  opacity: 0.0;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: red;
+  transition: all ease 1s;
 }
 #chatLoading{
   width:100%;
@@ -82,4 +98,20 @@ html{
 .chatLoadLabel {
 position:relative;
 margin-top:1em;
+}
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease;
+}
+
+.slide-1 {
+  transform: translateX(0%);
+}
+
+.slide-2 {
+  transform: translateX(-110%);
 }

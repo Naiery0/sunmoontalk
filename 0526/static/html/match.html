@@ -9,10 +9,16 @@
 <body>
 
     <div id="chatMain">
-        <div id="chatLobby">
-            <span>익명의 상대방과 대화를 나눠보세요!</span>
-            <input class="btn" type="button" value="시작하기">
-        </div>  
+        <div id="chatWrap">
+            <div id="chatLobby">
+                <span>익명의 상대방과 대화를 나눠보세요!</span>
+                <input class="btn" id="btn" type="button" value="시작하기" onclick="toggleSlide()">
+            </div>
+            <div id="chatStat">
+                테스트
+            </div>
+        </div>
+
         <div id="chatLoading">
 
             <span id="chatLoadBigCircle">

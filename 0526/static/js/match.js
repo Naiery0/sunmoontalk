@@ -75,3 +75,50 @@ function loading_animation(){
   if(loading_index>=100) loading_index = 0;
   loading_index = loading_index+1;
 }
+
+let intervalId;
+let CURRENT_SCREEN;
+function toggleSlide() {
+  let btn = document.getElementById("btn");
+
+  clearInterval(intervalId);
+  intervalId = null;
+}
+
+intervalId = setInterval(function () {
+  showSlide2();
+  setTimeout(showSlide1, 5000);
+}, 10000);
+
+function showSlide1(){
+  CURRENT_SCREEN = "chatLobby";
+  console.log("현재 스크린 : "+CURRENT_SCREEN);
+  
+  let slide1 = document.getElementById("chatLobby");
+  let slide2 = document.getElementById("chatStat");
+
+  slide1.style.display = 'flex';
+  slide2.style.opacity = '0.0';
+
+  setTimeout(()=>{
+    slide1.style.opacity = '1.0';
+    slide2.style.display = 'none';
+  },10)
+
+}
+function showSlide2(){
+  CURRENT_SCREEN = "chatStat";
+  console.log("현재 스크린 : "+CURRENT_SCREEN);
+
+  let slide1 = document.getElementById("chatLobby");
+  let slide2 = document.getElementById("chatStat");
+
+  slide2.style.display = 'flex';
+  slide1.style.opacity = '0.0';
+  
+  
+  setTimeout(()=>{
+    slide1.style.display = 'none';
+    slide2.style.opacity = '1.0';
+  },10)
+}
