@@ -20,11 +20,17 @@ function sendFindAccount(event) {
       body: formData.toString()
     })
       .then(response => response.json())
-      .then(data => {
-        alert("이메일을 전송하였습니다!");
-        window.parent.location.href = "../html/login.html";
-      })
-      .catch(error => {
+      .then(function (response) {
+        // 서버 응답 처리
+        if (response.status == 404) {
+          alert('등록된 이메일이 아닙니다.');
+          return;
+        }
+        else if (response.status == 200) {
+          alert("이메일을 전송하였습니다!");
+          window.parent.location.href = "../html/login.html";
+        }
+      }).catch(error => {
         console.error("Error:", error);
       });
   } else {//이메일을 입력하지 않았을 때
