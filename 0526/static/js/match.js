@@ -1,4 +1,4 @@
-const chatLobby = document.getElementById("chatLobby");
+
 let animation_work;
 // 서버에 연결합니다.
 const socket = io();
@@ -23,23 +23,6 @@ function getSessionID(){
     return null; // sessionID 쿠키를 찾지 못한 경우 null 반환
 }
 
-// "시작하기" 버튼 클릭에 대한 이벤트 리스너를 추가합니다.
-chatLobby.addEventListener('click', function(event) {
-  if (event.target.tagName === 'INPUT') {
-
-    let temp = getSessionID();
-
-    if(temp!=""&&temp!=null){
-      requestMatch();
-      chatLobby.style.display = 'none';
-      chatLoading.style.display = 'flex';
-    }
-    else{
-      alert("로그인 후 사용하실 수 있습니다");
-      window.parent.location.href = "../html/login.html";
-    }
-  }
-});
 
 // 매칭 성공 응답을 처리하는 이벤트 핸들러를 등록
 socket.on('matchSuccess', function(data) {
@@ -137,73 +120,31 @@ function showSlide2(){
   },4000);
 }
 
+
 intervalId = setTimeout(() => {
   showSlide2();
 }, 2000);
 
-// 서버에 워드클라우드 데이터 요청
-fetch('/wordcloud')
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error('워드클라우드 데이터 요청 실패');
-    }
-    return response.json();
-  })
-  .then((data) => {
-    // 워드클라우드 생성
-    createWordCloud(data.wordCounts);
-  })
-  .catch((error) => {
-    // 에러 발생 시 처리할 내용을 작성하세요.
-    console.error('워드클라우드 데이터 요청 에러', error);
-  });
 
-// 워드클라우드 생성 함수
-function createWordCloud(wordCounts) {
-  // 빈도수가 n회 이상인 단어 필터링
-  const filteredWordCounts = Object.entries(wordCounts).filter(([word, count]) => count >= 1);
+// "시작하기" 버튼 클릭에 대한 이벤트 리스너를 추가
+function start_matching() {
 
-  // 빈도수 기준 내림차순으로 정렬
-  const sortedWordCounts = filteredWordCounts.sort((a, b) => b[1] - a[1]);
+  clearTimeout(intervalId);
+  const chatLobby = document.getElementById("chatLobby");
+  const chatStat = document.getElementById("chatStat");
+  const tool = document.getElementById("tool");
 
-  // 상위 30개 키워드 추출
-  const topKeywords = sortedWordCounts.slice(0, 30);
+  let temp = getSessionID();
 
-  // 워드클라우드 생성 옵션 설정
-  const options = {
-    list: topKeywords,
-    gridSize: 20,
-    weightFactor: 17,
-    fontFamily: 'omyu_pretty',
-    backgroundColor: '#ddfafa',
-    color: 'black',
-    rotateRatio: 0,
-    shuffle: true,
-    shape: 'square',
-    drawOutOfBound: false,
-    origin: [750, 330]
-  };
-  // 워드클라우드 생성
-  WordCloud(document.getElementById('wordcloud'), options);
-
-  setTimeout(() => {
-    let cloud = document.getElementById("wordcloud");
-    let spanElements = cloud.getElementsByTagName("span");
-
-    console.log(spanElements.length + "개의 데이터 확인!");
-    for (let i = 0; i < spanElements.length; i++) {
-
-      let spanElement = spanElements[i];
-      spanElement.style.borderRadius = '15px';
-      spanElement.style.paddingLeft = '0.25em';
-      spanElement.style.paddingRight = '0.25em';
-      spanElement.style.backgroundColor = 'RGB('
-        + (Math.floor(Math.random() * 255)+100) + ','
-        + (Math.floor(Math.random() * 255)+100) + ','
-        + (Math.floor(Math.random() * 255)+100) + ')';
-      //console.log(i + "번째 데이터에 스타일 적용 완료");
-    }
-  }, 100);
-
-
-}
+  if (temp != "" && temp != null) {
+    requestMatch();
+    chatLobby.style.display = 'none';
+    chatLoading.style.display = 'flex';
+    tool.style.display = 'none';
+    chatStat.style.display = 'none';
+  }
+  else {
+    alert("로그인 후 사용하실 수 있습니다");
+    window.parent.location.href = "../html/login.html";
+  }
+};

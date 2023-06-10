@@ -32,7 +32,7 @@ function createWordCloud(wordCounts) {
     gridSize: 20,
     weightFactor: 17,
     fontFamily: 'omyu_pretty',
-    backgroundColor: '#ddfafa',
+    backgroundColor: 'skyblue',
     color: 'black',
     rotateRatio: 0,
     shuffle: true,
@@ -41,10 +41,9 @@ function createWordCloud(wordCounts) {
     origin: [750, 330]
   };
   // 워드클라우드 생성
-  WordCloud(document.getElementById('wordcloud'), options);
-
+  WordCloud(document.getElementById('chatStat'), options);
   setTimeout(() => {
-    let cloud = document.getElementById("wordcloud");
+    let cloud = document.getElementById("chatStat");
     let spanElements = cloud.getElementsByTagName("span");
 
     console.log(spanElements.length + "개의 데이터 확인!");
@@ -59,7 +58,7 @@ function createWordCloud(wordCounts) {
         + (Math.floor(Math.random() * 255)+100) + ','
         + (Math.floor(Math.random() * 255)+100) + ')';
       //console.log(i + "번째 데이터에 스타일 적용 완료");
-    }
-  }, 100);
-
+    }cloud.innerHTML += "<span class='label'>가장 많이 오갔던 대화는?</span>"
+  }, 300);
+  
 }

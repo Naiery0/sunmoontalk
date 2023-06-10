@@ -23,7 +23,9 @@ html{
   z-index:10;
 
   overflow: hidden;
-  display:block;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }
 .btn{
   position: relative;
@@ -34,11 +36,12 @@ html{
   background-color: transparent;
   font-family: "omyu_pretty";
   cursor:pointer;
-  margin-top:10em;
 
   width:5em;
   height:1.5em;
   transition: all ease 0.5s;
+  z-index: 999;
+  margin-top: 12em;
 }
 .btn:hover{
   border:1px solid skyblue;
@@ -61,12 +64,11 @@ html{
   height:100%;
   left:-0.17em;
   top:-0.13em;
-  display:none; /* flex */
+  display:flex; /* flex */
   opacity: 0.0;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: red;
   transition: all ease 1s;
 }
 #chatLoading{
@@ -96,11 +98,35 @@ html{
   background-color: skyblue;
 }
 .chatLoadLabel {
-position:relative;
-margin-top:1em;
+  position:relative;
+  margin-top:1em;
 }
 #wordcloud {
   font-family: 'omyu_pretty';
   width: 100%;
   height: 100vh;
+}
+.screenList{
+  position: absolute;
+  border:1px solid white;
+  border-radius: 50%;
+  background-color: white;
+  width:0.3em;
+  height:0.3em;
+  bottom:1em;
+  left:47.5%;
+  transition: all ease 0.5s;
+  cursor:pointer;
+}
+.screenList:nth-of-type(2){
+  left:51.5%;
+  background-color: transparent;
+}
+
+.label{
+  margin-bottom: 12em;
+}
+
+#chatLobby span{
+  margin-bottom: 7em;
 }
