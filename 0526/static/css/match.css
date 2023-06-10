@@ -99,19 +99,8 @@ html{
 position:relative;
 margin-top:1em;
 }
-.slide {
-  position: absolute;
-  top: 0;
-  left: 0;
+#wordcloud {
+  font-family: 'omyu_pretty';
   width: 100%;
-  height: 100%;
-  transition: transform 0.5s ease;
-}
-
-.slide-1 {
-  transform: translateX(0%);
-}
-
-.slide-2 {
-  transform: translateX(-110%);
+  height: 100vh;
 }

@@ -62,5 +62,4 @@ function createWordCloud(wordCounts) {
     }
   }, 100);
 
-
 }

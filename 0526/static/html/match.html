@@ -5,6 +5,7 @@
     <link href="../css/main.css" type="text/css" rel="stylesheet">
     <script src="../socket.io/socket.io.js"></script>
     <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.0/wordcloud2.min.js"></script>
 </head>
 <body>
 
@@ -15,7 +16,7 @@
                 <input class="btn" id="btn" type="button" value="시작하기" onclick="toggleSlide()">
             </div>
             <div id="chatStat">
-                테스트
+                <div id="wordcloud"></div>
             </div>
         </div>
 
@@ -29,6 +30,6 @@
             
         </div>
     </div>
-    <script src="../js/match.js"></script>
+    <script src="../js/wordCloud.js"></script>
 </body>
 </html>
