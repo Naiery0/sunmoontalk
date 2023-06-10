@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const mailInfo = require('./mailInfo');
-const mailfrom = '@naver.com'; //자기 네이버 메일
+const mailfrom = 'molly724@naver.com'; //자기 네이버 메일
 
 const filter = new Filter();
 //console.log(filter.clean("욕을 합니다 개새끼")); ==> 욕을 합니다 *** 로 출력
@@ -159,14 +159,14 @@ const sendMail = (req, res, email) => {
     if (error) {
       console.log(error);
       res.status(500).json({ message: '이메일 전송에 실패했습니다.' });
-    } else {
+    } 
+    else {
       console.log('Email sent: ' + info.response);
       const exists = false;
       res.status(200).json({ message: '이메일이 성공적으로 전송되었습니다.', code: mailCode, exists: exists });
     }
   });
 }
-
 
 app.post('/send-findAccount', (req, res) => {
   const email = req.body.email;
@@ -186,39 +186,41 @@ app.post('/send-findAccount', (req, res) => {
         res.status(404).json({ message: '일치하는 계정이 없습니다.' });
         return;
       }
-    })
 
-  const accountInfo = results[0];
-  const username = accountInfo.username;
-  const password = accountInfo.password;
+      const accountInfo = results[0];
+      const username = accountInfo.username;
+      const password = accountInfo.password;
 
-  // 이메일 전송 설정
-  const transporter = nodemailer.createTransport({
-    service: 'Naver',
-    host: 'smtp.naver.com',
-    auth: {
-      user: mailInfo.funideaEmailIfo.user, // 보내는 이메일 계정
-      pass: mailInfo.funideaEmailIfo.pass // 보내는 이메일 계정의 비밀번호
+      // 이메일 전송 설정
+      const transporter = nodemailer.createTransport({
+        service: 'Naver',
+        host: 'smtp.naver.com',
+        auth: {
+          user: mailInfo.funideaEmailIfo.user, // 보내는 이메일 계정
+          pass: mailInfo.funideaEmailIfo.pass // 보내는 이메일 계정의 비밀번호
+        }
+      });
+      const mailOptions = {
+        from: 'molly724@naver.com', // 보내는 사람 이메일 주소
+        to: email, // 받는 사람 이메일 주소
+        subject: '선문톡에서 보낸 계정 정보입니다.', // 이메일 제목
+        text: `아이디: ${username}\n비밀번호: ${password}` // 이메일 내용
+      };
+
+      // 이메일 전송
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          res.status(500).json({ message: '이메일 전송에 실패했습니다.' });
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.status(200).json({ message: '이메일이 성공적으로 전송되었습니다.' });
+        }
+      });
     }
-  });
-  const mailOptions = {
-    from: 'molly724@naver.com', // 보내는 사람 이메일 주소
-    to: email, // 받는 사람 이메일 주소
-    subject: '선문톡에서 보낸 계정 정보입니다.', // 이메일 제목
-    text: `아이디: ${username}\n비밀번호: ${password}` // 이메일 내용
-  };
-
-  // 이메일 전송
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      res.status(500).json({ message: '이메일 전송에 실패했습니다.' });
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.status(200).json({ message: '이메일이 성공적으로 전송되었습니다.' });
-    }
-  });
+  );
 });
+
 
 app.post('/signup', (req, res) => {
   const username = req.body.username;
