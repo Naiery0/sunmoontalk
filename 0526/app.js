@@ -276,8 +276,6 @@ app.post('/change-password', (req, res) => {
   const id = req.body.id;
   const newPassword = req.body.newPassword;
 
-  console.log("받은 아디" + id, "받은 비번" + newPassword);
-
   // 비밀번호 변경 로직 수행
   connection.query(
     'UPDATE userdata SET password = ? WHERE username = ?',
@@ -287,7 +285,7 @@ app.post('/change-password', (req, res) => {
         console.error('비밀번호 변경 실패:', error);
         res.status(500).send('비밀번호 변경 실패');
       } else {
-        console.log('비밀번호 변경 성공');
+        //console.log('비밀번호 변경 성공');
         res.sendStatus(200);
       }
     }
@@ -310,7 +308,7 @@ app.post('/change-nickname', (req, res) => {
           console.error('닉네임 변경 실패:', error);
           res.status(500).send('닉네임 변경 실패');
         } else {
-          console.log('닉네임 변경 성공');
+          //console.log('닉네임 변경 성공');
           res.sendStatus(200);
         }
       }
@@ -482,7 +480,7 @@ io.sockets.on('connection', function (socket) {
   const cookie = socket.handshake.headers.cookie; // 소켓의 쿠키를 가져옴
   // 매칭 요청을 받았을 때 처리
   socket.on('requestMatch', () => {
-    console.log(`${socket.id}이(가) 매칭을 요청했습니다.`);
+    //console.log(`${cookie}이(가) 매칭을 요청했습니다.`);
 
     // 사용자의 쿠키가 enjoyCookie 배열에 없는 경우에만 매칭 시도
     let cookieExists = false;
@@ -506,12 +504,12 @@ io.sockets.on('connection', function (socket) {
       socket.emit('matchWaiting');
     }
     else {
-      console.log("매칭 거절");
+      //console.log("매칭 거절");
     }
   });
 
   socket.on('newUser', function (name) {
-    console.log(name + ' 님이 접속하였습니다요~.');
+    //console.log(name + ' 님이 접속하였습니다요~.');
     socket.name = name;
     //console.log(name + '이라고 저장은 했다요~');
     /*io.sockets.emit('update', {
@@ -569,7 +567,7 @@ io.sockets.on('connection', function (socket) {
     }
     //로그 요청 
     socket.to(chatRoomId).emit('giveLog');
-    console.log(`${socket.id}이(가) 연결을 종료했습니다.`);
+    //console.log(`${socket.id}이(가) 연결을 종료했습니다.`);
     //console.log(socket.name + ' 님이 나가셨습니다.');
     socket.to(chatRoomId).emit('update', {
       type: 'disconnect',
@@ -587,7 +585,7 @@ io.sockets.on('connection', function (socket) {
         logdata.query(
           'INSERT INTO chatlogs (roomid ,username, message, sendtime) VALUES (?, ?, ?, ?)', [log.roomid, log.username, log.message, log.sendtime]);
       });
-      console.log("로그저장 완료");
+      //console.log("로그저장 완료");
       logSave[chatRoomId] = 1;
     }
   });
@@ -617,7 +615,7 @@ function tryMatch() {
     const user2 = matchQueue[randomIndexes[1]];
 
     // 매칭 성공
-    console.log(`${user1.id}과(와) ${user2.id}이(가) 매칭되었습니다.`);
+    //console.log(`${user1.id}과(와) ${user2.id}이(가) 매칭되었습니다.`);
 
     // 채팅방 생성
     const chatRoomId = generateChatRoomId();
@@ -626,7 +624,7 @@ function tryMatch() {
       users: [user1.id, user2.id]
     };
     chatRooms[chatRoomId] = chatRoom;
-    console.log("생성된 chatRoomId : " + chatRoomId);
+    //console.log("생성된 chatRoomId : " + chatRoomId);
     // 채팅방에 입장
     user1.join(chatRoomId); //이 부분이 필요할까?
     user2.join(chatRoomId);
@@ -671,7 +669,7 @@ function generateChatRoomId() {
   let min = ("0" + date.getMinutes()).slice(-2);
   let sec = ("0" + date.getSeconds()).slice(-2);
   const timestamp = `${year}-${month}-${day}/${hour}:${min}:${sec}`
-  console.log("생성된 룸:" + 'room_' + Math.random().toString(36).substr(2, 9) + timestamp);
+  //console.log("생성된 룸:" + 'room_' + Math.random().toString(36).substr(2, 9) + timestamp);
   return 'room_' + Math.random().toString(36).substr(2, 9) + timestamp;
 }
 

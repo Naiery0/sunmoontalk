@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const username = escapeHTML(usernameInput.value);
             const password = escapeHTML(passwordInput.value);
-            console.log("보낼 계정:" + username, password);
 
             fetch('/login', {
                 method: 'POST',
@@ -27,17 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log("서버가 준 데이타:" + data.message);
                     if (data.message == '로그인에 성공했습니다.') {
-                        console.log("서버가 준 세션:" + data.sessionID);
                         document.cookie = `sessionID=${data.sessionID}; path=/`;
                         setTimeout(() => {
-                            console.log("로그인 하며 얻은 쿠키:" + document.cookie);
                             window.location.href = '../index.html';
                         }, 1000);
                     } else {
                         notice.style.display = 'block';
-                        console.log('로그인 실패');
                     }
                 })
                 .catch((error) => {

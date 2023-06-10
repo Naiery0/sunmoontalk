@@ -20,8 +20,8 @@ function sendFindAccount(event) {
       body: formData.toString()
     })
       .then(response => response.json())
-      .then(data => {//이메일을 전송했을 때 화면전환
-        console.log("계정이메일 전송 완료");
+      .then(data => {
+        alert("이메일을 전송하였습니다!");
       })
       .catch(error => {
         console.error("Error:", error);

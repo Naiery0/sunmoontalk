@@ -7,21 +7,6 @@ function LogOut() {
     alert("로그아웃 되었습니다");
     window.parent.location.href = "../index.html";
 }
-/*
-function getCookieValue(cookieName) {
-    const name = cookieName + "=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookieArray = decodedCookie.split(";");
-
-    for (let i = 0; i < cookieArray.length; i++) {
-        let cookie = cookieArray[i].trim();
-        if (cookie.indexOf(name) === 0) {
-            return cookie.substring(name.length, cookie.length);
-        }
-    }
-
-    return "";
-}*/
 let userid;
 let userpw;
 let usernick;
@@ -29,7 +14,6 @@ function displayInfo() {
     //const sessionID = getCookieValue("sessionID");
     //const username = sessionStorage.getItem('username');
     const username = decryptSessionID(document.cookie);
-    console.log("로그인한 회원의 아이디 : " + username);
 
 
     // 서버로 로그인 요청을 보냅니다.
@@ -47,10 +31,6 @@ function displayInfo() {
             return response.json();
         })
         .then((data) => {
-            /*consloe.log(data.userID);
-            consloe.log(data.userPW);
-            consloe.log(data.userEmail);
-            consloe.log(data.userNickname);*/
             id.innerText = data.username;
             userid = data.username;
             userpw = data.password;

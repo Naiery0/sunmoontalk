@@ -66,7 +66,6 @@ function sendVerificationCode(event) {
         } else noticeEMAIL.style.display = 'none';
       }
       validateEmail(email);
-      console.log("이메일 형식" + flag);
     }
     else {
       email = email + "@mail.sunmoon.ac.kr";
@@ -143,7 +142,6 @@ function submitForm() {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data); // 서버 응답 확인
       window.location.href = '../html/login.html';
     })
     .catch(error => {

@@ -4,7 +4,6 @@ let animation_work;
 const socket = io();
 // 매칭 요청을 보내는 함수입니다.
 function requestMatch() {
-  console.log("시작");
   // app.js에 매칭 요청을 보냅니다.
   socket.emit('requestMatch');
 
@@ -14,7 +13,6 @@ function requestMatch() {
 
 function getSessionID(){
     const cookies = document.cookie.split(";"); // 모든 쿠키 가져오기
-    //console.log(cookies);
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
       // 쿠키 이름이 "sessionID"인 경우 값을 추출하여 반환
@@ -48,20 +46,14 @@ socket.on('matchSuccess', function(data) {
   const chatRoomId = data.chatRoomId;
   const matchedUser = data.matchedUser;
   clearInterval(animation_work);
-  //console.log(`매칭 성공! 채팅방 ID: ${chatRoomId}`);
-  //console.log(`상대방 정보 - ID: ${matchedUser.id}, 이름: ${matchedUser.name}`);
-  
   // 채팅방 페이지로 이동합니다.
   const chatPageUrl = `../html/chat.html?room=${chatRoomId}`;
-  //console.log("이동할 uri:"+chatPageUrl);
-  //이 부분에서 chat.js로 chatRoomId를 전달하는게 좋겠다.
-  localStorage.setItem('roomid', chatRoomId); //js간 값 전달  <-> value = localStorage.getItem('roomid');
+  localStorage.setItem('roomid', chatRoomId); 
   window.location.href = chatPageUrl;
 });
 
 // 매칭 실패 응답을 처리하는 이벤트 핸들러를 등록합니다.
 socket.on('matchFailed', function() {
-  console.log('매칭 실패! 상대방이 없습니다.');
   clearInterval(animation_work);
   alert('매칭 실패! 상대방이 없습니다.');
 });

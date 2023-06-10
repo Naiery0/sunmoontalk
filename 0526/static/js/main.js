@@ -31,8 +31,6 @@ function isLogin() {
     if (opt) {
       //console.log("불러온 세션아이디 : "+sessionID);
       if (sessionID !== "" && sessionID !== null) {
-        console.log("로그인 정보 확인");
-        
         opt.innerText = "내정보";
         opt.onclick = function() {
           //convertScreen('./html/myPage.html');
