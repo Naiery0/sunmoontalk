@@ -9,7 +9,7 @@ let chatLogs=[];
 let chatRoomId;
 // 메세지 수신함수
 socket.on('connect', function () {
-    let name = "익명";
+    const name = decryptSessionID(document.cookie);
     //이부분에서 match.js에서 보내준 chatRoomId를 받아서
     chatRoomId = localStorage.getItem('roomid');
     //서버에 새로운 유저가 왔다 알림
@@ -17,6 +17,15 @@ socket.on('connect', function () {
     //서버가 받으면 수신한 소켓에게 chatRoomId를 부여한다.
     socket.emit('sendRoomId', chatRoomId);
     socket.emit('newUser', name);
+})
+
+socket.on('welcome',function (name) {
+    chatLog.innerHTML +=
+    "<span class='chat_message_wrap'>"
+    + "<span class='chat_notice'>"
+    + "<span class='chat_output'>" + name+'님이 입장하셨습니다.' + "</span>"
+    + "</span>"
+    + "</span>";
 })
 
 //로그 요청 받음
@@ -145,4 +154,11 @@ function decryptSessionID(encryptedSessionID) {
     return decryptedSessionID;
   }
   
-  
+function decryptSessionID(encryptedSessionID) {
+    const encryptedString = encryptedSessionID.replace('sessionID=', '');
+    const base64Decoded = atob(encryptedString);
+    const decoder = new TextDecoder('utf-8');
+    const decryptedSessionID = decoder.decode(new Uint8Array([...base64Decoded].map((c) => c.charCodeAt(0))));
+
+    return decryptedSessionID;
+}

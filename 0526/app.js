@@ -64,8 +64,8 @@ app.get('/index.html', (req, res) => {
 app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  console.log(username);
-  console.log(password);
+  //console.log(username);
+  //console.log(password);
 
   // 사용자 인증 로직 (예시: 데이터베이스에서 검색)
   connection.query(
@@ -509,14 +509,16 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('newUser', function (name) {
-    //console.log(name + ' 님이 접속하였습니다요~.');
+    console.log(name + ' 님이 접속하였습니다요~.');
     socket.name = name;
-    //console.log(name + '이라고 저장은 했다요~');
+    console.log(name + '이라고 저장은 했다요~');
     /*io.sockets.emit('update', {
       type: 'connect',
       name: 'SERVER',
       message: name + '님이 접속하였습니다.',
     });*/
+    const chatRoomId = getChatRoomId(socket);
+    socket.to(chatRoomId).emit('welcome',name); 
 
     // 사용자 배열에 추가
     users.push(socket);
@@ -535,8 +537,6 @@ io.sockets.on('connection', function (socket) {
       chatRooms[chatRoomId] = updatedChatRoom;
       socket.join(chatRoomId);
     }
-
-
   })
 
   socket.on('message', function (data) {
