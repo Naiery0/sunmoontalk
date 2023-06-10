@@ -81,44 +81,62 @@ let CURRENT_SCREEN;
 function toggleSlide() {
   let btn = document.getElementById("btn");
 
-  clearInterval(intervalId);
+  clearTimeout(intervalId);
   intervalId = null;
 }
-
-intervalId = setInterval(function () {
-  showSlide2();
-  setTimeout(showSlide1, 5000);
-}, 10000);
 
 function showSlide1(){
   CURRENT_SCREEN = "chatLobby";
   console.log("현재 스크린 : "+CURRENT_SCREEN);
+  clearTimeout(intervalId);
   
   let slide1 = document.getElementById("chatLobby");
   let slide2 = document.getElementById("chatStat");
+  let dot1 = document.getElementById("screen1");
+  let dot2 = document.getElementById("screen2");
 
   slide1.style.display = 'flex';
   slide2.style.opacity = '0.0';
+
+  dot1.style.backgroundColor = 'white';
+  dot2.style.backgroundColor = 'transparent';
 
   setTimeout(()=>{
     slide1.style.opacity = '1.0';
     slide2.style.display = 'none';
   },10)
 
+  intervalId = setTimeout(()=>{
+    showSlide2();
+  },4000);
+
 }
 function showSlide2(){
   CURRENT_SCREEN = "chatStat";
   console.log("현재 스크린 : "+CURRENT_SCREEN);
+  clearTimeout(intervalId);
 
   let slide1 = document.getElementById("chatLobby");
   let slide2 = document.getElementById("chatStat");
+  let dot1 = document.getElementById("screen1");
+  let dot2 = document.getElementById("screen2");
 
   slide2.style.display = 'flex';
   slide1.style.opacity = '0.0';
   
-  
+  dot1.style.backgroundColor = 'transparent';
+  dot2.style.backgroundColor = 'white';
+
   setTimeout(()=>{
     slide1.style.display = 'none';
     slide2.style.opacity = '1.0';
   },10)
+
+  intervalId = setTimeout(()=>{
+    showSlide1();
+  },4000);
 }
+
+intervalId = setTimeout(() => {
+  showSlide2();
+}, 2000);
