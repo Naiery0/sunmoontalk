@@ -4,6 +4,8 @@ const chatInput = document.getElementById("chat_Input");
 const socket = io();
 
 const username = decryptSessionID(document.cookie);
+let colorMine;
+let colorOther;
 
 let chatLogs=[];
 let chatRoomId;
@@ -17,6 +19,20 @@ socket.on('connect', function () {
     //서버가 받으면 수신한 소켓에게 chatRoomId를 부여한다.
     socket.emit('sendRoomId', chatRoomId);
     socket.emit('newUser', name); //사실 여기서 보내는 이름은 id임
+
+    let rand = Math.floor(Math.random()*255);
+    let rand2 = Math.floor(Math.random()*255);
+    let rand3 = Math.floor(Math.random()*255);
+    let color = "RGB("+rand+","+rand2+","+rand3+")";
+
+    colorMine = color;
+
+    rand = Math.floor(Math.random()*255);
+    rand2 = Math.floor(Math.random()*255);
+    rand3 = Math.floor(Math.random()*255);
+    color = "RGB("+rand+","+rand2+","+rand3+")";
+
+    colorOther = color;
 })
 
 //입장 시 상대방 이름 통보
@@ -44,6 +60,7 @@ socket.on('disconnect', function () {
         + "</span>";
 
     // 채팅 입력 폼 비활성화
+    chatLog.scrollTop = chatLog.scrollHeight;
     chatInput.disabled = true;
 });
 
@@ -65,7 +82,7 @@ socket.on('update', function (data) {
         let year = date.getFullYear();
         let month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1 필요, 앞에 0을 붙여 2자리로 만듦
         let day = ("0" + date.getDate()).slice(-2); // 일, 앞에 0을 붙여 2자리로 만듦
-        let hour = ("0" + date.getHours()).slice(-2);
+        let hour = ("" + date.getHours()).slice(-2);
         let min = ("" + date.getMinutes()).slice(-2); //001~009 뜨는거 이 부분 수정해봤으니 적용되는지 확인해야됨
         let sec = ("0" + date.getSeconds()).slice(-2);
 
@@ -75,6 +92,9 @@ socket.on('update', function (data) {
         chatLog.innerHTML +=
         "<div class='chat_message_wrap'>" +
             "<div class='chat chat_message_other'>" +
+                "<div class='chat_profile' style='background-color:"+colorOther+"'>" +
+                    "<img class='Imgprofile' src='../assets/person.png'>" +
+                "</div>" +
                 "<div class='chat_output'>" +
                     `${data.message}` +
                 "</div>" +
@@ -105,7 +125,7 @@ function send() {
         let year = date.getFullYear();
         let month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1 필요, 앞에 0을 붙여 2자리로 만듦
         let day = ("0" + date.getDate()).slice(-2); // 일, 앞에 0을 붙여 2자리로 만듦
-        let hour = ("0" + date.getHours()).slice(-2);
+        let hour = ("" + date.getHours()).slice(-2);
         let min = ("" + date.getMinutes()).slice(-2);
         let sec = ("0" + date.getSeconds()).slice(-2);
 
@@ -120,7 +140,10 @@ function send() {
                     "</div>" +
                     "<div class='chat_output'>" +
                         escapedMessage +
-                    "</div>" +                
+                    "</div>" +
+                    "<div class='chat_profile' style='background-color:"+colorMine+"'>" +
+                        "<img class='Imgprofile' src='../assets/person.png'>" +
+                    "</div>" +
                 "</div>" +
             "</div>";
 

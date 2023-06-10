@@ -17,7 +17,7 @@ html {
 #chat_Input {
     position: absolute;
     border: none;
-    width: 94.8%;
+    width: 74%;
     height: 5%;
     min-height: 1.5em;
     padding-left: 0.5em;
@@ -26,6 +26,7 @@ html {
     left: 2.5%;
     bottom: 2%;
     font-size: 1.5em;
+    margin-left: 10%;
 }
 
 #chat_Input:focus {
@@ -34,7 +35,7 @@ html {
 
 #chatLog {
     position: absolute;
-    width: 95%;
+    width: 75%;
     height: 90%;
 
     left: 2.5%;
@@ -46,6 +47,7 @@ html {
     border-radius: 30px;
     display: flex;
     flex-direction: column;
+    margin-left: 10%;
 }
 
 #chatLog::-webkit-scrollbar {
@@ -84,8 +86,8 @@ html {
     font-size:1em;
     width:0.7em;
     height:0.7em;
-    right:-0.65em;
-    top:1.2em;
+    right:3.5em;
+    bottom:1.2em;
     clip-path: polygon(100% 50%, 0 0, 0 100%);
 }
 
@@ -123,7 +125,7 @@ html {
     font-size: 1em;
     width: 0.7em;
     height: 0.7em;
-    left: -0.65em;
+    left: 3.5em;
     top: 1.2em;
     clip-path: polygon(0 50%, 100% 0, 100% 100%);
 }
@@ -172,3 +174,22 @@ html {
     background-color: var(--chatother);
     color: black;
   } 
+
+  .chat_message_mine .chat_profile{
+    border: 1px solid white;
+    border-radius: 10px;
+    width:3em;
+    height:3em;
+    margin-left:1em;
+  }
+  .chat_message_other .chat_profile{
+    border: 1px solid white;
+    border-radius: 10px;
+    width:3em;
+    height:3em;
+    margin-right:1em;
+  }
+  .Imgprofile{
+    width:3em;
+    height:3em;
+  }
