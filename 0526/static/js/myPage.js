@@ -285,3 +285,32 @@ function decryptSessionID(encryptedSessionID) {
 
     return decryptedSessionID;
 }
+function DarkMode() {
+    const toggleBtn = document.getElementById("togglebtn");
+
+    if (toggleBtn.checked) {
+        // 다크모드
+        sessionStorage.setItem("darkmode", true);
+        console.log("다크모드 설정");
+    }
+    else {
+        // 디폴트모드
+        sessionStorage.setItem("darkmode", false);
+        console.log("다크모드 해제");
+    }
+}
+function checkDark(){
+    const isToggled = sessionStorage.getItem("darkmode");
+    console.log(isToggled);
+    if (isToggled == null) {
+        console.log("초기상태");
+        sessionStorage.setItem("darkmode", false);
+    }
+    else {
+        if (isToggled === "true") {
+            console.log("다크모드 유지");
+            document.getElementById("togglebtn").checked = true;
+        }
+    }
+}
+checkDark();
