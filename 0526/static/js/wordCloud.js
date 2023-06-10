@@ -23,14 +23,14 @@ function createWordCloud(wordCounts) {
   // 빈도수 기준 내림차순으로 정렬
   const sortedWordCounts = filteredWordCounts.sort((a, b) => b[1] - a[1]);
 
-  // 상위 30개 키워드 추출
-  const topKeywords = sortedWordCounts.slice(0, 30);
+  // 상위 50개 키워드 추출
+  const topKeywords = sortedWordCounts.slice(0, 50);
 
   // 워드클라우드 생성 옵션 설정
   const options = {
     list: topKeywords,
     gridSize: 20,
-    weightFactor: 17,
+    weightFactor: 10,
     fontFamily: 'omyu_pretty',
     backgroundColor: 'skyblue',
     color: 'black',
