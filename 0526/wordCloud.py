@@ -1,5 +1,5 @@
 import mysql.connector
-from konlpy.tag import Komoran
+from konlpy.tag import Hannanum
 import json
 import sys
 import io
@@ -29,17 +29,16 @@ def fetch_chat_logs():
 def calculate_word_counts(messages):
     word_counts = {}
 
-    komoran = Komoran()
+    hannanum = Hannanum()
     
     for message in messages:
-        words = komoran.pos(message['message'])
-        for word, pos in words:
-            if pos.startswith('N'):  # 명사(N으로 시작하는 품사)만 추출
-                if len(re.sub('[^가-힣]', '', word)) > 0:  # 자음 또는 모음만 있는 경우 제외
-                    if word in word_counts:
-                        word_counts[word] += 1
-                    else:
-                        word_counts[word] = 1
+        words = hannanum.nouns(message['message'])
+        for word in words:
+            if len(re.sub('[^가-힣]', '', word)) > 0:  # 자음 또는 모음만 있는 경우 제외
+                if word in word_counts:
+                    word_counts[word] += 1
+                else:
+                    word_counts[word] = 1
     
     return word_counts
 

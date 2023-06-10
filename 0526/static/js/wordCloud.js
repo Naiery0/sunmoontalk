@@ -29,17 +29,16 @@
       // 워드클라우드 생성 옵션 설정
       const options = {
         list: topKeywords,
-        //list: Object.entries(wordCounts)
-        gridSize: 10,
-        weightFactor: 15,
+        gridSize: 20,
+        weightFactor: 17,
         fontFamily: 'omyu_pretty', 
         color: 'random-dark',
-        rotateRatio: 0.5,
+        rotateRatio: 0,
         backgroundColor: '#fff',
         shuffle: true,
         shape: 'square',
         drawOutOfBound: false,
-        origin: [400, 250]
+        origin: [570, 330]
       };
 
       // 워드클라우드 생성
