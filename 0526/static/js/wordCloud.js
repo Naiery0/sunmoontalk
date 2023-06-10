@@ -36,7 +36,7 @@ function createWordCloud(wordCounts) {
     color: 'black',
     rotateRatio: 0,
     shuffle: true,
-    shape: 'square',
+    shape: 'circle',
     drawOutOfBound: false,
     origin: [750, 330]
   };
