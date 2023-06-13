@@ -6,6 +6,7 @@ function LogOut() {
     document.cookie = "sessionID" + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     alert("로그아웃 되었습니다");
     window.parent.location.href = "../index.html";
+    sessionStorage.setItem("darkmode", false);
 }
 let userid;
 let userpw;
@@ -46,7 +47,7 @@ function displayInfo() {
         })
         .catch((error) => {
             // 에러 발생 시 처리할 내용
-            console.error('내정보 요청 에러', error);
+            //console.error('내정보 요청 에러', error);
         });
 }
 displayInfo();
@@ -57,28 +58,28 @@ displayInfo();
 */
 
 function changePW() {
-    var changeBtn = document.createElement("input"); //저장하기 버튼 생성
+    let changeBtn = document.createElement("input"); //저장하기 버튼 생성
     changeBtn.setAttribute("class", "btn save pw");
     changeBtn.setAttribute("type", "button");
     changeBtn.setAttribute("value", "저장하기");
     changeBtn.setAttribute("onclick", "savePW()");
 
-    var pwLabel = document.getElementById("pw");
-    var pwInput = document.createElement("input"); //비번 입력란 생성
+    let pwLabel = document.getElementById("pw");
+    let pwInput = document.createElement("input"); //비번 입력란 생성
     pwInput.setAttribute("class", "inputField");
     pwInput.setAttribute("type", "password");
     pwInput.setAttribute("id", "newPw");
     pwInput.setAttribute("placeholder", "새 비밀번호 입력");
 
-    var pwConfirmInput = document.createElement("input"); // 비밀번호 확인 입력란 생성
+    let pwConfirmInput = document.createElement("input"); // 비밀번호 확인 입력란 생성
     pwConfirmInput.setAttribute("class", "inputField");
     pwConfirmInput.setAttribute("type", "password");
     pwConfirmInput.setAttribute("id", "newPwConfirm");
     pwConfirmInput.setAttribute("placeholder", "새 비밀번호 확인");
 
-    var wrap = document.getElementsByClassName("wrap")[0];
+    let wrap = document.getElementsByClassName("wrap")[0];
 
-    //var cancelBtn = document.getElementsByClassName("btn cancel pw")[0];
+    //let cancelBtn = document.getElementsByClassName("btn cancel pw")[0];
     //cancelBtn.style.display = "block";
 
     wrap.replaceChild(pwInput, pwLabel);
@@ -87,8 +88,8 @@ function changePW() {
 }
 
 function savePW() {
-    var newPassword = document.getElementById("newPw").value;
-    var newPasswordConfirm = document.getElementById("newPwConfirm").value;
+    let newPassword = document.getElementById("newPw").value;
+    let newPasswordConfirm = document.getElementById("newPwConfirm").value;
 
     // 비밀번호 일치 여부 확인
     if (newPassword !== newPasswordConfirm) {
@@ -114,14 +115,14 @@ function savePW() {
             // 서버 응답 처리
             if (response.ok) {
                 // 비밀번호 변경 성공 -> 초기 상태로 돌아감
-                var changeBtn = document.createElement("input");
+                let changeBtn = document.createElement("input");
                 changeBtn.setAttribute("class", "btn pw");
                 changeBtn.setAttribute("type", "button");
                 changeBtn.setAttribute("value", "변경하기");
                 changeBtn.setAttribute("onclick", "changePW()");
 
-                var pwInput = document.getElementById("newPw");
-                var pwLabel = document.createElement("span");
+                let pwInput = document.getElementById("newPw");
+                let pwLabel = document.createElement("span");
                 pwLabel.setAttribute("class", "label2");
                 pwLabel.setAttribute("id", "pw");
                 pwLabel.innerText = "";
@@ -130,7 +131,7 @@ function savePW() {
                     pwLabel.innerText += "*";
                 }
 
-                var wrap = document.getElementsByClassName("wrap")[0];
+                let wrap = document.getElementsByClassName("wrap")[0];
 
                 wrap.replaceChild(changeBtn, document.getElementsByClassName("btn save pw")[0]);
                 wrap.replaceChild(pwLabel, pwInput);
@@ -142,19 +143,19 @@ function savePW() {
         })
         .catch(function (error) {
             // 네트워크 에러 등 예외 처리
-            console.error("Error:", error);
+            //console.error("Error:", error);
         });
 }
 
 function changeCanclePW() {
-    var changeBtn = document.createElement("input");
+    let changeBtn = document.createElement("input");
     changeBtn.setAttribute("class", "btn pw");
     changeBtn.setAttribute("type", "button");
     changeBtn.setAttribute("value", "변경하기");
     changeBtn.setAttribute("onclick", "changePW()");
 
-    var pwInput = document.getElementById("newPw");
-    var pwLabel = document.createElement("span");
+    let pwInput = document.getElementById("newPw");
+    let pwLabel = document.createElement("span");
     pwLabel.setAttribute("class", "label2");
     pwLabel.setAttribute("id", "pw");
     pwLabel.innerText = "";
@@ -163,7 +164,7 @@ function changeCanclePW() {
         pwLabel.innerText += "*";
     }
 
-    var wrap = document.getElementsByClassName("wrap")[0];
+    let wrap = document.getElementsByClassName("wrap")[0];
 
     wrap.replaceChild(changeBtn, document.getElementsByClassName("btn save pw")[0]);
     wrap.replaceChild(pwLabel, pwInput);
@@ -172,23 +173,23 @@ function changeCanclePW() {
 
 
 function changeNick() {
-    var changeBtn = document.createElement("input"); //저장하기 버튼 생성
+    let changeBtn = document.createElement("input"); //저장하기 버튼 생성
     changeBtn.setAttribute("class", "btn save nick");
     changeBtn.setAttribute("type", "button");
     changeBtn.setAttribute("value", "저장하기");
     changeBtn.setAttribute("onclick", "saveNick()");
 
-    var nicknameLabel = document.getElementById("nickname"); //닉네임 입력란 생성
-    var nicknameInput = document.createElement("input");
+    let nicknameLabel = document.getElementById("nickname"); //닉네임 입력란 생성
+    let nicknameInput = document.createElement("input");
     nicknameInput.setAttribute("class", "inputField");
     nicknameInput.setAttribute("type", "text");
     nicknameInput.setAttribute("id", "newNickname");
     nicknameInput.setAttribute("placeholder", "새 닉네임 입력");
 
-    //var cancelBtn = document.getElementsByClassName("btn cancel nick")[0];
+    //let cancelBtn = document.getElementsByClassName("btn cancel nick")[0];
     //cancelBtn.style.display = "block";
 
-    var wrap = document.getElementsByClassName("wrap")[0];
+    let wrap = document.getElementsByClassName("wrap")[0];
 
     wrap.replaceChild(changeBtn, document.getElementsByClassName("btn nick")[0]);
     wrap.replaceChild(nicknameInput, nicknameLabel);
@@ -196,10 +197,10 @@ function changeNick() {
 }
 
 function saveNick() {
-    var newNickname = document.getElementById("newNickname").value;
+    let newNickname = document.getElementById("newNickname").value;
 
     // 공백 및 특수문자 확인
-    var regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]+$/; // 영문, 숫자, 한글만 허용
+    let regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]+$/; // 영문, 숫자, 한글만 허용
     if (!regex.test(newNickname)) {
         alert("닉네임은 공백 및 특수문자를 포함할 수 없습니다.");
         return;
@@ -231,19 +232,19 @@ function saveNick() {
             }
             else if (response.ok) {
                 // 닉네임 변경 성공 -> 초기상태로 돌아감
-                var changeBtn = document.createElement("input");
+                let changeBtn = document.createElement("input");
                 changeBtn.setAttribute("class", "btn nick");
                 changeBtn.setAttribute("type", "button");
                 changeBtn.setAttribute("value", "변경하기");
                 changeBtn.setAttribute("onclick", "changeNick()");
 
-                var nicknameInput = document.getElementById("newNickname");
-                var nicknameLabel = document.createElement("span");
+                let nicknameInput = document.getElementById("newNickname");
+                let nicknameLabel = document.createElement("span");
                 nicknameLabel.setAttribute("class", "label2");
                 nicknameLabel.setAttribute("id", "nickname");
                 nicknameLabel.innerText = newNickname;
 
-                var wrap = document.getElementsByClassName("wrap")[0];
+                let wrap = document.getElementsByClassName("wrap")[0];
 
                 wrap.replaceChild(changeBtn, document.getElementsByClassName("btn save nick")[0]);
                 wrap.replaceChild(nicknameLabel, nicknameInput);
@@ -259,19 +260,19 @@ function saveNick() {
 }
 
 function changeCancleNick() {
-    var changeBtn = document.createElement("input");
+    let changeBtn = document.createElement("input");
     changeBtn.setAttribute("class", "btn nick");
     changeBtn.setAttribute("type", "button");
     changeBtn.setAttribute("value", "변경하기");
     changeBtn.setAttribute("onclick", "changeNick()");
 
-    var nicknameInput = document.getElementById("newNickname");
-    var nicknameLabel = document.createElement("span");
+    let nicknameInput = document.getElementById("newNickname");
+    let nicknameLabel = document.createElement("span");
     nicknameLabel.setAttribute("class", "label2");
     nicknameLabel.setAttribute("id", "nickname");
     nicknameLabel.innerText = usernick;
 
-    var wrap = document.getElementsByClassName("wrap")[0];
+    let wrap = document.getElementsByClassName("wrap")[0];
 
     wrap.replaceChild(changeBtn, document.getElementsByClassName("btn save nick")[0]);
     wrap.replaceChild(nicknameLabel, nicknameInput);
@@ -291,24 +292,24 @@ function DarkMode() {
     if (toggleBtn.checked) {
         // 다크모드
         sessionStorage.setItem("darkmode", true);
-        console.log("다크모드 설정");
+        //console.log("다크모드 설정");
     }
     else {
         // 디폴트모드
         sessionStorage.setItem("darkmode", false);
-        console.log("다크모드 해제");
+        //console.log("다크모드 해제");
     }
 }
 function checkDark(){
     const isToggled = sessionStorage.getItem("darkmode");
     console.log(isToggled);
     if (isToggled == null) {
-        console.log("초기상태");
+        //console.log("초기상태");
         sessionStorage.setItem("darkmode", false);
     }
     else {
         if (isToggled === "true") {
-            console.log("다크모드 유지");
+            //console.log("다크모드 유지");
             document.getElementById("togglebtn").checked = true;
         }
     }
