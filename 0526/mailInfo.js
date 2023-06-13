@@ -2,8 +2,8 @@
 
 const mailInfo = {
     funideaEmailIfo: {
-        user: '', // 자기 네이버 메일, 비번
-        pass: ''
+        user: 'test', // 자기 네이버 메일, 비번
+        pass: 'test'
     }
 }; 
 
