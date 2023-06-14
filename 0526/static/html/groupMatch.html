@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="../css/match.css" type="text/css" rel="stylesheet">
+    <link href="../css/main.css" type="text/css" rel="stylesheet">
+    <script src="../socket.io/socket.io.js"></script>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.0/wordcloud2.min.js"></script>
+</head>
+
+<body>
+    <div id="chatMain">
+        <div id="chatWrap">
+            <div id="chatLobby">
+                <span>다양한 학우들과 동시에 대화를 나눠보세요!</span>
+            </div>
+            <div id="chatStat">
+            </div>
+        </div>
+
+        <div id="tool">
+            <input class="btn" id="btn" type="button" value="시작하기" onclick="start_matching()">
+            <span class="screenList" id="screen1" onclick="showSlide1()"></span>
+            <span class="screenList" id="screen2" onclick="showSlide2()"></span>
+        </div>
+    </div>
+    <!--<script src="../js/wordCloud.js"></script>-->
+    <script src="../js/match.js"></script>
+
+</body>
+
+</html>
