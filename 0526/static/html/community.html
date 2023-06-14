@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="../css/community.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <script src="../js/main.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="BoardList">
+            <ul class="BoardList-wrap">
+                <input id="search" type="text" placeholder="검색">
+                <input class="searchBtn" type="button">
+                <li class="BoardList-sel">자유게시판</li>
+                <li class="BoardList-sel">추가게시판</li>
+            </ul>
+        </div>
+        <div class="BoardContent">
+            <div class="ContentWrap">
+                <table class="ContentFrame">
+                    <tr class="ContentRow">
+                        <td class="Content Index">번호</td>
+                        <td class="Content Title">제목</td>
+                        <td class="Content Writer">글쓴이</td>
+                        <td class="Content Date">등록일</td>
+                        <td class="Content Hits">조회</td>
+                        <td class="Content Recommend">추천</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="toolWrap">
+                <input class="btn" type="button" value="목록">
+                <input class="btn" type="button" value="글쓰기">               
+            </div>
+        </div>
+    </div>
+    <srcipt src="../js/community.js"></srcipt>
+</body>
+</html>
