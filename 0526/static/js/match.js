@@ -2,9 +2,14 @@
 let animation_work;
 // 서버에 연결합니다.
 const socket = io();
-// 매칭 요청을 보내는 함수입니다.
+
+function requestGroupChat() {
+  socket.emit('requestGroupChat');
+}
+
+// 매칭 요청을 보내는 함수
 function requestMatch() {
-  // app.js에 매칭 요청을 보냅니다.
+  // app.js에 매칭 요청
   socket.emit('requestMatch');
 
   // 매칭 애니메이션 실행 -> 로딩바 돌아감 -> 작업이 끝나면 clearInterval(animation_work)로 종료
@@ -70,7 +75,6 @@ function toggleSlide() {
 
 function showSlide1(){
   CURRENT_SCREEN = "chatLobby";
-  console.log("현재 스크린 : "+CURRENT_SCREEN);
   clearTimeout(intervalId);
   
   let slide1 = document.getElementById("chatLobby");
@@ -96,7 +100,6 @@ function showSlide1(){
 }
 function showSlide2(){
   CURRENT_SCREEN = "chatStat";
-  console.log("현재 스크린 : "+CURRENT_SCREEN);
   clearTimeout(intervalId);
 
   let slide1 = document.getElementById("chatLobby");

@@ -190,7 +190,7 @@ function decryptSessionID(encryptedSessionID) {
 function darkmode() {
     const isDarked = sessionStorage.getItem("darkmode");
     if (isDarked) {
-        console.log("다크모드 활성화!");    
+        //console.log("다크모드 활성화!");    
         const chatLog = document.getElementById('chatLog');
         chatLog.classList.toggle('darkmode');
 
@@ -198,7 +198,7 @@ function darkmode() {
         root.classList.add('darkmode'); // 다크 모드 클래스 추가
     }
     else{
-        console.log("다크모드 해제!");
+        //console.log("다크모드 해제!");
         const root = document.documentElement;
         root.classList.remove('darkmode'); // 다크 모드 클래스 제거
     }
