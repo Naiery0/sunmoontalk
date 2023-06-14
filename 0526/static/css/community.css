@@ -39,7 +39,6 @@ input{
 }
 .ContentWrap{
     position:relative;
-    border:1px solid blue;
     height:90%;
 }
 .toolWrap{
@@ -93,32 +92,30 @@ input{
 }
 .ContentRow{
     position: relative;
+    height:5%;
+    border:1px solid black;
 }
 .Content{
     font-size:1.5em;
-    font-weight: bold;
+    text-align: center;
+    
+    border-bottom: 1px solid lightgray;
 }
 .Index{
-    border:1px solid black;
     width:5%;
 }
 .Title{
-    border:1px solid black;
     width:50%;
 }
 .Writer{
-    border:1px solid black;
     width:20%;
 }
 .Date{
-    border:1px solid black;
     width:15%;
 }
 .Hits{
-    border:1px solid black;
     width:5%;
 }
 .Recommend{
-    border:1px solid black;
     width:5%;
 }
