@@ -23,7 +23,9 @@ def fetch_chat_logs():
     cursor.execute('SELECT message FROM chatlogs')
     results = cursor.fetchall()
     cursor.close()
-    return results
+    # 빈 메시지 필터링
+    chat_logs = [result for result in results if result['message'].strip() != '']
+    return chat_logs
 
 # 단어 빈도수 계산 작업
 def calculate_word_counts(messages):
