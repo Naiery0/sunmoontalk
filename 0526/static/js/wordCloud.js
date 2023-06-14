@@ -45,8 +45,6 @@ function createWordCloud(wordCounts) {
   setTimeout(() => {
     let cloud = document.getElementById("chatStat");
     let spanElements = cloud.getElementsByTagName("span");
-
-    console.log(spanElements.length + "개의 데이터 확인!");
     for (let i = 0; i < spanElements.length; i++) {
 
       let spanElement = spanElements[i];
@@ -57,7 +55,6 @@ function createWordCloud(wordCounts) {
         + (Math.floor(Math.random() * 255)+100) + ','
         + (Math.floor(Math.random() * 255)+100) + ','
         + (Math.floor(Math.random() * 255)+100) + ')';
-      //console.log(i + "번째 데이터에 스타일 적용 완료");
     }cloud.innerHTML += "<span class='label'>가장 많이 오갔던 대화는?</span>"
   }, 300);
   

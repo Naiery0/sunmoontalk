@@ -99,7 +99,6 @@ function sendVerificationCode(event) {
           }
         })
         .catch(error => {
-          console.log("알수없는에러");
           console.error("Error:", error);
         });
     }
