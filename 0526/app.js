@@ -550,8 +550,9 @@ io.sockets.on('connection', function (socket) {
     }
   });
 
-      // 'groupchat' 요청 처리
+    // 'groupchat' 요청 처리
   socket.on('requestGroupChat', () => {
+    console.log("그룹챗 요청 받음");
     //그룹 채팅방 인원 수 추가
     roomIndex = roomIndex+1;
 
@@ -569,9 +570,10 @@ io.sockets.on('connection', function (socket) {
 
     const chatRoomId = 'groupchat';
     // 클라이언트를 그룹 채팅방에 입장
+    socket.emit('matchSuccess', {chatRoomId: chatRoomId});
     //socket.join(groupChatRoomId);
     // 클라이언트에게 그룹 채팅방 입장 정보를 전송
-    socket.emit('groupChatJoin', chatRoomId, roomIndex); //클라측에서 setroomid 소켓 요청 작업 필요함/ 위 입장 하는 작업도 setroomid 응답부분에서 할 듯
+    socket.emit('groupChatJoin', roomIndex); //클라측에서 setroomid 소켓 요청 작업 필요함/ 위 입장 하는 작업도 setroomid 응답부분에서 할 듯
     }
     else {
       socket.emit('matchCancle');
@@ -596,7 +598,14 @@ io.sockets.on('connection', function (socket) {
 
         // 'welcome' 이벤트와 함께 nickname 전송
         const chatRoomId = getChatRoomId(socket);
-        socket.to(chatRoomId).emit('welcome', nickname);
+
+        if(chatRoomId=='groupchat'){
+          socket.emit('roomIndex',{roomIndex: roomIndex});
+          socket.to(chatRoomId).emit('welcome', {message : nickname+"님이 입장하셨습니다. 현재 인원 수 : "+roomIndex});
+        }
+        else{
+          socket.to(chatRoomId).emit('welcome', {message : nickname+"님이 입장하셨습니다."});
+        }
       }
     });
 
@@ -606,7 +615,9 @@ io.sockets.on('connection', function (socket) {
 
   // 이부분에서 룸아디를 다시 받아서 해당 방의 정보를 재설정!!
   socket.on('sendRoomId', function (chatRoomId) {
+    if(chatRoomId != 'groupchat'){
     logSave[chatRoomId] = 0;//로그 보냈나 설정
+    }
     const chatRoom = chatRooms[chatRoomId];
     if (chatRoom) {
       // 채팅방이 유효한 경우에만 처리합니다.
@@ -623,9 +634,7 @@ io.sockets.on('connection', function (socket) {
     data.name = socket.name;
     // 현재 소켓이 속한 채팅방 ID를 가져옵니다.
     const chatRoomId = getChatRoomId(socket);
-
     //console.log("가져온 룸id:" + chatRoomId);
-
     if (chatRoomId) {
       // 해당 채팅방에만 메시지 전송
       socket.to(chatRoomId).emit('update', data);
@@ -635,11 +644,11 @@ io.sockets.on('connection', function (socket) {
   //소켓이 연결을 종료했을 때
   socket.on('disconnect', function () {
     const chatRoomId = getChatRoomId(socket);
+    // 해당 사용자의 쿠키를 찾아 제거
+    const cookieIndex = enjoyCookie.indexOf(cookie);
     if (cookieIndex !== -1) {
       enjoyCookie.splice(cookieIndex, 1);
     }
-    // 해당 사용자의 쿠키를 찾아 제거
-    const cookieIndex = enjoyCookie.indexOf(cookie);
     if (cookieIndex !== -1) {
       enjoyCookie.splice(cookieIndex, 1);
     }
@@ -674,7 +683,6 @@ io.sockets.on('connection', function (socket) {
       //로그 요청 
       socket.to(chatRoomId).emit('giveLog');
     }
-
     else{
     //로그 요청 
     socket.to(chatRoomId).emit('giveLog');
@@ -702,6 +710,19 @@ io.sockets.on('connection', function (socket) {
       logSave[chatRoomId] = 1;
     }
   });
+
+  //그룹채팅 로그저장
+  socket.on('groupLog', function (chatLog) {
+      //로그를 받고
+      chatLog.forEach(log => {
+        const { roomid, username, message, sendtime } = log;
+        logdata.query(
+          'INSERT INTO chatlogs (roomid ,username, message, sendtime) VALUES (?, ?, ?, ?)', [log.roomid, log.username, log.message, log.sendtime]);
+      });
+      console.log("그룹챗 로그저장 완료");
+    }
+  );
+
   // 사용자 배열에서 제거
   const index = users.findIndex(user => user.id === socket.id);
   if (index !== -1) {
