@@ -20,20 +20,32 @@ socket.on('connect', function () {
     socket.emit('sendRoomId', chatRoomId);
     socket.emit('newUser', name); //사실 여기서 보내는 이름은 id임
 
-    let rand = Math.floor(Math.random()*255);
-    let rand2 = Math.floor(Math.random()*255);
-    let rand3 = Math.floor(Math.random()*255);
-    let color = "RGB("+rand+","+rand2+","+rand3+")";
-
-    colorMine = color;
-
-    rand = Math.floor(Math.random()*255);
-    rand2 = Math.floor(Math.random()*255);
-    rand3 = Math.floor(Math.random()*255);
-    color = "RGB("+rand+","+rand2+","+rand3+")";
-
-    colorOther = color;
+    // 단체채팅일 경우에 true주고, 랜덤채팅일 경우에 false
+    addColor_profile(false);
 })
+
+function addColor_profile(isGroup){
+
+    if (isGroup) {
+        colorOther = "lightgray";
+        colorMine = "purple";
+    }
+    else {
+        let rand = Math.floor(Math.random() * 255);
+        let rand2 = Math.floor(Math.random() * 255);
+        let rand3 = Math.floor(Math.random() * 255);
+        let color = "RGB(" + rand + "," + rand2 + "," + rand3 + ")";
+
+        colorMine = color;
+
+        rand = Math.floor(Math.random() * 255);
+        rand2 = Math.floor(Math.random() * 255);
+        rand3 = Math.floor(Math.random() * 255);
+        color = "RGB(" + rand + "," + rand2 + "," + rand3 + ")";
+
+        colorOther = color;
+    }
+}
 
 //입장 시 상대방 이름 통보
 socket.on('welcome',function (name) { //여기서 받는게 닉네임
