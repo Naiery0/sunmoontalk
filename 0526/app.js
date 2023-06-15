@@ -24,7 +24,6 @@ const connection = mysql.createConnection({
   password: '123456',
   database: 'userdata'
 });
-
 const logdata = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -480,6 +479,8 @@ function encryptSessionID(username) {
 }
 
 // 암호화된 세션 ID를 복호화하는 함수
+/*
+// 암호화된 세션 ID를 복호화하는 함수
 function decryptSessionID(encryptedSessionID) {
   // 'sessionID=' 부분을 제외한 문자열 추출
   const encryptedString = encryptedSessionID.replace('sessionID=', '');
@@ -493,6 +494,7 @@ function decryptSessionID(encryptedSessionID) {
 
   return decryptedSessionID;
 }
+*/
 
 
 const server = http.createServer(app);
@@ -508,16 +510,8 @@ const logSave = {};
 // 쿠키를 통해 매칭 중 or 채팅 중인지
 let enjoyCookie = [];
 
-// 서버 시작 시 'groupchat' 채팅방 생성
-const groupChatRoomId = 'groupchat';
-let roomIndex = 0;
-const groupChatRoom = {
-  id: groupChatRoomId,
-  users: [],
-};
-chatRooms[groupChatRoomId] = groupChatRoom;
-
 //const chatRoomId = getChatRoomId(socket); 하고 socket.to(chatRoomId).emit 로 보내면 채팅방에 보내짐!
+
 io.sockets.on('connection', function (socket) {
   const cookie = socket.handshake.headers.cookie; // 소켓의 쿠키를 가져옴
   // 매칭 요청을 받았을 때 처리
@@ -546,38 +540,9 @@ io.sockets.on('connection', function (socket) {
       socket.emit('matchWaiting');
     }
     else {
-      socket.emit('matchCancle');
+      //console.log("매칭 거절");
     }
   });
-
-      // 'groupchat' 요청 처리
-  socket.on('requestGroupChat', () => {
-    //그룹 채팅방 인원 수 추가
-    roomIndex = roomIndex+1;
-
-    // 사용자의 쿠키가 enjoyCookie 배열에 없는 경우에만 입장
-    let cookieExists = false;
-    for (const existingCookie of enjoyCookie) {
-      if (existingCookie === cookie) {
-        cookieExists = true;
-        break;
-      }
-    }
-    if (!cookieExists) {
-    // 해당 쿠키를 enjoyCookie 배열에 추가
-    enjoyCookie.push(cookie);
-
-    const chatRoomId = 'groupchat';
-    // 클라이언트를 그룹 채팅방에 입장
-    //socket.join(groupChatRoomId);
-    // 클라이언트에게 그룹 채팅방 입장 정보를 전송
-    socket.emit('groupChatJoin', chatRoomId, roomIndex); //클라측에서 setroomid 소켓 요청 작업 필요함/ 위 입장 하는 작업도 setroomid 응답부분에서 할 듯
-    }
-    else {
-      socket.emit('matchCancle');
-    }
-  });
-
   
   socket.on('newUser', function (name) {
     socket.name = name;
@@ -612,7 +577,7 @@ io.sockets.on('connection', function (socket) {
       // 채팅방이 유효한 경우에만 처리합니다.
       const updatedChatRoom = {
         id: chatRoom.id,
-        users: [...chatRoom.users, socket.id],
+        users: [...chatRoom.users, socket.id]
       };
       chatRooms[chatRoomId] = updatedChatRoom;
       socket.join(chatRoomId);
@@ -635,9 +600,6 @@ io.sockets.on('connection', function (socket) {
   //소켓이 연결을 종료했을 때
   socket.on('disconnect', function () {
     const chatRoomId = getChatRoomId(socket);
-    if (cookieIndex !== -1) {
-      enjoyCookie.splice(cookieIndex, 1);
-    }
     // 해당 사용자의 쿠키를 찾아 제거
     const cookieIndex = enjoyCookie.indexOf(cookie);
     if (cookieIndex !== -1) {
@@ -648,34 +610,6 @@ io.sockets.on('connection', function (socket) {
     if (queueIndex !== -1) {
       matchQueue.splice(queueIndex, 1);
     }
-    
-    if(chatRoomId=='groupchat'){
-      //그룹 채팅방 인원 수 감소
-      roomIndex = roomIndex-1;
-
-      const userid = decryptSessionID(cookie);
-      const query = `SELECT nickname FROM userdata WHERE username = ?`;
-      connection.query(query, [userid], (error, results) => {
-        if (error) {
-          console.error('데이터베이스 조회 에러:', error);
-          return;
-        }
-  
-        if (results.length > 0) {
-          const userInfo = results[0];
-          const nickname = userInfo.nickname;
-          socket.to(chatRoomId).emit('update', {
-            type: 'disconnect',
-            name: 'SERVER',
-            message: nickname + '님이 채팅을 종료했습니다. 현재 인원 수 : '+roomIndex,
-          },roomIndex);
-        }
-      })
-      //로그 요청 
-      socket.to(chatRoomId).emit('giveLog');
-    }
-
-    else{
     //로그 요청 
     socket.to(chatRoomId).emit('giveLog');
     //console.log(`${socket.id}이(가) 연결을 종료했습니다.`);
@@ -685,9 +619,7 @@ io.sockets.on('connection', function (socket) {
       name: 'SERVER',
       message: /*socket.name +*/ '상대방이 채팅을 종료했습니다.',
     });
-  }
   });
-  
   //채팅 로그저장
   socket.on('log', function (chatLog) {
     const chatRoomId = getChatRoomId(socket);
@@ -734,13 +666,13 @@ function tryMatch() {
     const chatRoomId = generateChatRoomId();
     const chatRoom = {
       id: chatRoomId,
-      users: [/*user1.id, user2.id*/]
+      users: [user1.id, user2.id]
     };
     chatRooms[chatRoomId] = chatRoom;
     //console.log("생성된 chatRoomId : " + chatRoomId);
     // 채팅방에 입장
-    /*user1.join(chatRoomId); //이 부분이 필요할까?
-    user2.join(chatRoomId);*/
+    user1.join(chatRoomId); //이 부분이 필요할까?
+    user2.join(chatRoomId);
 
     // 매칭된 사용자들에게 매칭 성공 및 채팅방 정보 전송
     // 이 부분에 대해서도 건드릴 필요가 있음
