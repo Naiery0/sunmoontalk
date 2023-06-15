@@ -13,7 +13,7 @@ function requestMatch() {
   socket.emit('requestMatch');
 
   // 매칭 애니메이션 실행 -> 로딩바 돌아감 -> 작업이 끝나면 clearInterval(animation_work)로 종료
-  animation_work = setInterval(loading_animation,20);
+  animation_work = setInterval(loading_animation,15);
 }
 
 function getSessionID(){
@@ -32,7 +32,7 @@ function getSessionID(){
 // 매칭 성공 응답을 처리하는 이벤트 핸들러를 등록
 socket.on('matchSuccess', function(data) {
   const chatRoomId = data.chatRoomId;
-  const matchedUser = data.matchedUser;
+  //const matchedUser = data.matchedUser;
   clearInterval(animation_work);
   // 채팅방 페이지로 이동
   const chatPageUrl = `../html/chat.html?room=${chatRoomId}`;
@@ -130,7 +130,7 @@ intervalId = setTimeout(() => {
 
 
 // "시작하기" 버튼 클릭에 대한 이벤트 리스너를 추가
-function start_matching() {
+function start_matching(num) {
 
   clearTimeout(intervalId);
   const chatLobby = document.getElementById("chatLobby");
@@ -140,11 +140,16 @@ function start_matching() {
   let temp = getSessionID();
 
   if (temp != "" && temp != null) {
-    requestMatch();
-    chatLobby.style.display = 'none';
-    chatLoading.style.display = 'flex';
-    tool.style.display = 'none';
-    chatStat.style.display = 'none';
+    if(num==2){
+    requestGroupChat();
+    }//개인톡일때
+    else{
+      requestMatch();
+      chatLobby.style.display = 'none';
+      chatLoading.style.display = 'flex';
+      tool.style.display = 'none';
+      chatStat.style.display = 'none';
+    }
   }
   else {
     alert("로그인 후 사용하실 수 있습니다");

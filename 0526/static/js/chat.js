@@ -9,7 +9,8 @@ let colorOther;
 
 let chatLogs=[];
 let chatRoomId;
-// 메세지 수신함수
+
+//연결
 socket.on('connect', function () {
     const name = decryptSessionID(document.cookie); 
     //이부분에서 match.js에서 보내준 chatRoomId를 받아서
@@ -20,39 +21,35 @@ socket.on('connect', function () {
     socket.emit('sendRoomId', chatRoomId);
     socket.emit('newUser', name); //사실 여기서 보내는 이름은 id임
 
-    // 단체채팅일 경우에 true주고, 랜덤채팅일 경우에 false
-    addColor_profile(false);
+    let rand = Math.floor(Math.random()*255);
+    let rand2 = Math.floor(Math.random()*255);
+    let rand3 = Math.floor(Math.random()*255);
+    let color = "RGB("+rand+","+rand2+","+rand3+")";
+
+    colorMine = color;
+
+    rand = Math.floor(Math.random()*255);
+    rand2 = Math.floor(Math.random()*255);
+    rand3 = Math.floor(Math.random()*255);
+    color = "RGB("+rand+","+rand2+","+rand3+")";
+
+    colorOther = color;
 })
-
-function addColor_profile(isGroup){
-
-    if (isGroup) {
-        colorOther = "lightgray";
-        colorMine = "purple";
-    }
-    else {
-        let rand = Math.floor(Math.random() * 255);
-        let rand2 = Math.floor(Math.random() * 255);
-        let rand3 = Math.floor(Math.random() * 255);
-        let color = "RGB(" + rand + "," + rand2 + "," + rand3 + ")";
-
-        colorMine = color;
-
-        rand = Math.floor(Math.random() * 255);
-        rand2 = Math.floor(Math.random() * 255);
-        rand3 = Math.floor(Math.random() * 255);
-        color = "RGB(" + rand + "," + rand2 + "," + rand3 + ")";
-
-        colorOther = color;
-    }
-}
-
-//입장 시 상대방 이름 통보
-socket.on('welcome',function (name) { //여기서 받는게 닉네임
+socket.on('roomIndex',function (data){
     chatLog.innerHTML +=
     "<span class='chat_message_wrap'>"
     + "<span class='chat_notice'>"
-    + "<span class='chat_output'>" + name+'님이 입장하셨습니다.' + "</span>"
+    + "<span class='chat_output'>" + '단체 채팅에 입장하셨습니다! 현재 인원 수 : '+`${data.roomIndex}` + "</span>"
+    + "</span>"
+    + "</span>";
+})
+
+//입장 시 상대방 이름 통보
+socket.on('welcome',function (data) { //여기서 받는게 닉네임
+    chatLog.innerHTML +=
+    "<span class='chat_message_wrap'>"
+    + "<span class='chat_notice'>"
+    + "<span class='chat_output'>" + `${data.message}` + "</span>"
     + "</span>"
     + "</span>";
 })
@@ -86,8 +83,12 @@ socket.on('update', function (data) {
             + "<span class='chat_output'>" + `${data.message}` + "</span>"
             + "</span>"
             + "</span>";
-
-        chatInput.disabled = true;
+        if (chatRoomId=='groupchat'){
+            
+        }
+        else {
+            chatInput.disabled = true;
+        }
     }
     else {
         let date = new Date();
@@ -161,8 +162,15 @@ function send() {
 
         //서버에 메세지 이벤트, 내용 전달
         socket.emit('message', { type: 'message', username: username, message: message });
-        chatLogs.push({ roomid: chatRoomId, username: username,  message: message, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
-        chatLog.scrollTop = chatLog.scrollHeight;
+        if(chatRoomId=='groupchat'){
+            const groupChatLog=[];
+            groupChatLog.push({ roomid: chatRoomId, username: username,  message: message, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` })
+            socket.emit('groupLog', groupChatLog);
+        }
+        else{
+            chatLogs.push({ roomid: chatRoomId, username: username,  message: message, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
     }
 }
 
