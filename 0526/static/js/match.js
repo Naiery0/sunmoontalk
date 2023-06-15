@@ -40,6 +40,10 @@ socket.on('matchSuccess', function(data) {
   window.location.href = chatPageUrl;
 });
 
+socket.on('matchCancle', function(){
+  alert("계정이 이미 채팅에 참여하고 있습니다.");
+})
+
 // 매칭 실패 응답을 처리하는 이벤트 핸들러를 등록
 socket.on('matchFailed', function() {
   clearInterval(animation_work);

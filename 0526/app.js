@@ -583,7 +583,7 @@ io.sockets.on('connection', function (socket) {
   
   socket.on('newUser', function (name) {
     socket.name = name;
-
+    enjoyCookie.push(cookie);
     // 데이터베이스 쿼리 실행
     const query = `SELECT nickname FROM userdata WHERE username = ?`;
     connection.query(query, [name], (error, results) => {
@@ -660,8 +660,9 @@ io.sockets.on('connection', function (socket) {
     
     if(chatRoomId=='groupchat'){
       //그룹 채팅방 인원 수 감소
-      roomIndex = roomIndex-1;
-
+      if(roomIndex>0){
+        roomIndex = roomIndex-1;
+      }
       const userid = decryptSessionID(cookie);
       const query = `SELECT nickname FROM userdata WHERE username = ?`;
       connection.query(query, [userid], (error, results) => {
