@@ -493,11 +493,24 @@ app.post('/savePost', (req, res) => {
   })
 });
 
-app.get('/removePost', (req, res) => {
+app.post('/removePost', (req, res) => {
+  const { id } = req.body;
 
-})
+  // 쿼리문 생성
+  const query = 'DELETE FROM community WHERE id = ?';
+  const values = [id];
 
-
+  // 게시물 삭제
+  communitydata.query(query, values, (err, result) => {
+    if (err) {
+      console.error('Error deleting post:', err);
+      res.status(500).send('Error deleting post');
+    } else {
+      console.log('Post deleted:', result);
+      res.status(200).json({ success: true });
+    }
+  });
+});
 
 function generateSessionID() {
   // 세션 아이디를 생성하는 로직을 구현합니다.

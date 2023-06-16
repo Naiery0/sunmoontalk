@@ -105,6 +105,15 @@ input{
     margin-top: 0.8em;
     width:100%;
 }
+.commentWrap .commentDelete{
+    position: absolute;
+    margin-top: 0.1em;
+    margin-left: 90%;
+    width: 5%;
+    color:red;
+    cursor:pointer;
+    display:none;
+}
 
 body::-webkit-scrollbar {
     display: block;

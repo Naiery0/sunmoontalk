@@ -19,10 +19,6 @@ function initializeBoard() {
     const contentFrame = document.getElementById("readCommentWrap");
 
     getPosts().then(posts => {
-
-        console.log(posts.length);
-        console.log(posts);
-
       
         const commentNav = document.getElementById("commentNav");
         for(let i=1;i<=((posts.length/10)+1);i++){
@@ -33,7 +29,6 @@ function initializeBoard() {
             }
         }
         maxPage = Math.floor(((posts.length/10)+1));
-        console.log("maxPage : "+maxPage);
         
         reversedPosts = posts.reverse(); 
         displayPage(0);
@@ -105,12 +100,22 @@ function displayPage(index){
             <span class="commentAuthor">${reversedPosts[i].writer}</span>
             <span class="commentDate">${localTime}</span>
             <span class="commentContent">${reversedPosts[i].content}</span>
+            <span class="commentDelete" id=del${i} onclick="deleteComment(${reversedPosts[i].id})">삭제</span>
             `;
-
+                
             contentFrame.appendChild(commentWrap);
+
+            const del = document.getElementById("del"+i);
+            if(reversedPosts[i].username == decryptSessionID(document.cookie)){
+                del.style.display = 'block';
+            }
+            else{
+                del.style.display = 'none';
+            }
         }
         else break;
     }
+
 }
 
 function decryptSessionID(encryptedSessionID) {
@@ -153,7 +158,7 @@ function updateTextLength() {
     }
 }
 function sendPost() {
-    // 게시글 쓰기
+    // 게시글 정보 가져오기
     //const postTitle = document.getElementById('post-title').value; 제목 필요없어짐
     const postAuthor = decryptSessionID(document.cookie);
     const postDate = getCurrentDate();
@@ -177,7 +182,6 @@ function sendPost() {
                 return response.json();
             })
             .then((data) => {
-                console.log(data);
                 postContent.innerText = "";
                 window.location.reload();
                 // 서버 응답 처리
@@ -192,8 +196,32 @@ function sendPost() {
     }
 }
 
+function deleteComment(commentID) {
 
-
+    if (confirm("댓글을 삭제하시겠습니까?")) {
+        fetch('/removePost', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "id=" + encodeURIComponent(commentID)
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                window.location.reload();
+                // 서버 응답 처리
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // 에러 처리
+            });
+    }
+}
 
 // 페이지 로드 시 게시판 초기화
 window.onload = function () {
