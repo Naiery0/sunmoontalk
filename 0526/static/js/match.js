@@ -1,4 +1,3 @@
-
 let animation_work;
 // 서버에 연결합니다.
 const socket = io();
@@ -40,10 +39,6 @@ socket.on('matchSuccess', function(data) {
   window.location.href = chatPageUrl;
 });
 
-socket.on('matchCancle', function(){
-  alert("계정이 이미 채팅에 참여하고 있습니다.");
-})
-
 // 매칭 실패 응답을 처리하는 이벤트 핸들러를 등록
 socket.on('matchFailed', function() {
   clearInterval(animation_work);
@@ -77,6 +72,74 @@ function toggleSlide() {
   intervalId = null;
 }
 
+function showSlide(index){
+
+  if(index==1) CURRENT_SCREEN = "chatLobby";
+  else if(index==2) CURRENT_SCREEN = "chatStat";
+  else if(index==3) CURRENT_SCREEN = "chatTime";
+  clearTimeout(intervalId);
+
+  let slide1 = document.getElementById("chatLobby");
+  let slide2 = document.getElementById("chatStat");
+  let slide3 = document.getElementById("chatTime");
+  let dot1 = document.getElementById("screen1");
+  let dot2 = document.getElementById("screen2");
+  let dot3 = document.getElementById("screen3");
+
+  slide1.style.opacity = '0.0';
+  slide2.style.opacity = '0.0';
+  slide3.style.opacity = '0.0';
+  dot1.style.backgroundColor = 'transparent';
+  dot2.style.backgroundColor = 'transparent';
+  dot3.style.backgroundColor = 'transparent';
+
+  switch(index){
+    case 1:
+      slide1.style.display = 'flex';
+      dot1.style.backgroundColor = 'white';
+
+      setTimeout(()=>{
+        slide1.style.opacity = '1.0';
+        slide2.style.display = 'none';
+        slide3.style.display = 'none';
+      },10)
+
+      intervalId = setTimeout(()=>{
+        showSlide(2);
+      },6000);
+      break;
+    case 2:
+      slide2.style.display = 'flex';
+      dot2.style.backgroundColor = 'white';
+
+      setTimeout(()=>{
+        slide2.style.opacity = '1.0';
+        slide1.style.display = 'none';
+        slide3.style.display = 'none';
+      },10)
+
+      intervalId = setTimeout(()=>{
+        showSlide(3);
+      },6000);
+      break;
+    case 3:
+      slide3.style.display = 'flex';
+      dot3.style.backgroundColor = 'white';
+
+      setTimeout(()=>{
+        slide3.style.opacity = '1.0';
+        slide1.style.display = 'none';
+        slide2.style.display = 'none';
+      },10)
+
+      intervalId = setTimeout(()=>{
+        showSlide(1);
+      },6000);
+      break;
+  }
+}
+
+/*
 function showSlide1(){
   CURRENT_SCREEN = "chatLobby";
   clearTimeout(intervalId);
@@ -126,11 +189,11 @@ function showSlide2(){
     showSlide1();
   },4000);
 }
-
+*/
 
 intervalId = setTimeout(() => {
-  showSlide2();
-}, 2000);
+  showSlide(2);
+}, 3000);
 
 
 // "시작하기" 버튼 클릭에 대한 이벤트 리스너를 추가

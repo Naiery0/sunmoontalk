@@ -26,6 +26,8 @@ function createWordCloud(wordCounts) {
   // 상위 50개 키워드 추출
   const topKeywords = sortedWordCounts.slice(0, 50);
 
+  const chatstat = document.getElementById("chatStat");
+
   // 워드클라우드 생성 옵션 설정
   const options = {
     list: topKeywords,
@@ -38,7 +40,7 @@ function createWordCloud(wordCounts) {
     shuffle: true,
     shape: 'circle',
     drawOutOfBound: false,
-    origin: [670, 330]
+    origin: [(chatstat.offsetWidth/2), (chatstat.offsetHeight/2.2)]
   };
   // 워드클라우드 생성
   WordCloud(document.getElementById('chatStat'), options);
@@ -58,4 +60,47 @@ function createWordCloud(wordCounts) {
     }cloud.innerHTML += "<span class='label'>가장 많이 오갔던 대화는?</span>"
   }, 300);
   
+}
+
+fetch('/chattime')
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error('이모션 데이터 요청 실패');
+        }
+        return response.json();
+    })
+    .then((data) => {
+        //그래프 생성
+        console.log(data.timeCounts);
+        createTimeGraph(data.timeCounts);
+    })
+    .catch((error) => {
+        // 에러 발생 시 처리할 내용을 작성하세요.
+        console.error('이모션 데이터 요청 에러', error);
+    });
+
+
+function createTimeGraph(timeCounts) {
+    // 막대 그래프 생성
+    const ctx = document.getElementById('timeChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(timeCounts),
+            datasets: [{
+                label: '시간대별 채팅 그래프',
+                data: Object.values(timeCounts),
+                backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                borderColor: 'rgba(255, 255, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }

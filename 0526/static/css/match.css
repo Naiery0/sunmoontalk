@@ -59,7 +59,7 @@ html{
   transition: all ease 1s;
 }
 #chatStat{
-  position: absolute;
+  position: relative;
   width:100%;
   height:100%;
   left:-0.17em;
@@ -70,6 +70,18 @@ html{
   align-items: center;
   flex-direction: column;
   transition: all ease 1s;
+}
+#chatTime{
+  position: absolute;
+  width:100%;
+  height:100%;
+  left:-0.17em;
+  top:-0.13em;
+  transition: all ease 1s;
+  display: none;
+  justify-content: center;
+  align-items: center;
+
 }
 #chatLoading{
   width:100%;
@@ -114,12 +126,16 @@ html{
   width:0.3em;
   height:0.3em;
   bottom:1em;
-  left:47.5%;
+  left:45.5%;
   transition: all ease 0.5s;
   cursor:pointer;
 }
 .screenList:nth-of-type(2){
-  left:51.5%;
+  left:49.5%;
+  background-color: transparent;
+}
+.screenList:nth-of-type(3){
+  left:53.5%;
   background-color: transparent;
 }
 
@@ -129,4 +145,13 @@ html{
 
 #chatLobby span{
   margin-bottom: 7em;
+}
+
+canvas {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 80%;
+  max-height: 55%;
+  position: absolute;
+  top: 15%;
 }

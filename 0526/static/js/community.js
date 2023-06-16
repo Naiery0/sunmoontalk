@@ -19,18 +19,23 @@ function initializeBoard() {
     const contentFrame = document.getElementById("readCommentWrap");
 
     getPosts().then(posts => {
-      
-        const commentNav = document.getElementById("commentNav");
-        for(let i=1;i<=((posts.length/10)+1);i++){
-            commentNav.innerHTML += "<span class='navBtn' id='nav"+i+"' onclick='displayPage("+(i-1)+")'>"+i+"</span>";
 
-            if(i==1){
-                document.getElementById("nav"+1).style.color = 'darkgray';
+        console.log(posts.length);
+        console.log(posts);
+
+
+        const commentNav = document.getElementById("commentNav");
+        for (let i = 1; i <= ((posts.length / 10) + 1); i++) {
+            commentNav.innerHTML += "<span class='navBtn' id='nav" + i + "' onclick='displayPage(" + (i - 1) + ")'>" + i + "</span>";
+
+            if (i == 1) {
+                document.getElementById("nav" + 1).style.color = 'darkgray';
             }
         }
-        maxPage = Math.floor(((posts.length/10)+1));
-        
-        reversedPosts = posts.reverse(); 
+        maxPage = Math.floor(((posts.length / 10) + 1));
+        console.log("maxPage : " + maxPage);
+
+        reversedPosts = posts.reverse();
         displayPage(0);
         /*
         reversedPosts.forEach(post => {
@@ -62,22 +67,22 @@ function initializeBoard() {
     });
 }
 
-function displayPage(index){
+function displayPage(index) {
     const contentFrame = document.getElementById("readCommentWrap");
     contentFrame.innerHTML = "";
-    
-    for(let i=0;i<maxPage;i++){
 
-        const nav = document.getElementById("nav"+(i+1));
-        if(index==i){
+    for (let i = 0; i < maxPage; i++) {
+
+        const nav = document.getElementById("nav" + (i + 1));
+        if (index == i) {
             nav.style.color = 'darkgray';
         }
-        else{
+        else {
             nav.style.color = 'black';
         }
     }
 
-    for(let i=(index*10);i<((index*10)+10);i++){
+    for (let i = (index * 10); i < ((index * 10) + 10); i++) {
 
         if (reversedPosts[i] != null) {
             const utcTime = reversedPosts[i].writetime;
@@ -102,14 +107,14 @@ function displayPage(index){
             <span class="commentContent">${reversedPosts[i].content}</span>
             <span class="commentDelete" id=del${i} onclick="deleteComment(${reversedPosts[i].id})">삭제</span>
             `;
-                
+
             contentFrame.appendChild(commentWrap);
 
-            const del = document.getElementById("del"+i);
-            if(reversedPosts[i].username == decryptSessionID(document.cookie)){
+            const del = document.getElementById("del" + i);
+            if (reversedPosts[i].username == decryptSessionID(document.cookie)) {
                 del.style.display = 'block';
             }
-            else{
+            else {
                 del.style.display = 'none';
             }
         }
@@ -158,41 +163,52 @@ function updateTextLength() {
     }
 }
 function sendPost() {
-    // 게시글 정보 가져오기
-    //const postTitle = document.getElementById('post-title').value; 제목 필요없어짐
-    const postAuthor = decryptSessionID(document.cookie);
-    const postDate = getCurrentDate();
-    const postContent = document.getElementById('comment').value;
 
-    if (postContent != "") {
-        // 서버로 데이터 전송 (예시: Fetch API 사용)
-        fetch('/savePost', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: "writer=" + encodeURIComponent(postAuthor) +
-                "&writetime=" + encodeURIComponent(postDate) +
-                "&content=" + encodeURIComponent(postContent)
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+    let temp = getSessionID();
+
+    if (temp != "" && temp != null) {
+
+        // 게시글 정보 가져오기
+        //const postTitle = document.getElementById('post-title').value; 제목 필요없어짐
+        const postAuthor = decryptSessionID(document.cookie);
+        const postDate = getCurrentDate();
+        const postContent = document.getElementById('comment').value;
+
+        if (postContent != "") {
+            // 서버로 데이터 전송 (예시: Fetch API 사용)
+            fetch('/savePost', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "writer=" + encodeURIComponent(postAuthor) +
+                    "&writetime=" + encodeURIComponent(postDate) +
+                    "&content=" + encodeURIComponent(postContent)
             })
-            .then((data) => {
-                postContent.innerText = "";
-                window.location.reload();
-                // 서버 응답 처리
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                // 에러 처리
-            });
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    postContent.innerText = "";
+                    window.location.reload();
+                    // 서버 응답 처리
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // 에러 처리
+                });
+        }
+        else {
+            alert("입력된 내용이 없습니다!")
+        }
     }
     else {
-        alert("입력된 내용이 없습니다!")
+        alert("로그인 후 사용하실 수 있습니다");
+        window.parent.location.href = "../html/login.html";
     }
 }
 
@@ -213,6 +229,8 @@ function deleteComment(commentID) {
                 return response.json();
             })
             .then((data) => {
+                console.log(data);
+                postContent.innerText = "";
                 window.location.reload();
                 // 서버 응답 처리
             })
@@ -221,6 +239,18 @@ function deleteComment(commentID) {
                 // 에러 처리
             });
     }
+}
+
+function getSessionID() {
+    const cookies = document.cookie.split(";"); // 모든 쿠키 가져오기
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // 쿠키 이름이 "sessionID"인 경우 값을 추출하여 반환
+        if (cookie.startsWith("sessionID=")) {
+            return cookie.substring("sessionID=".length, cookie.length);
+        }
+    }
+    return null; // sessionID 쿠키를 찾지 못한 경우 null 반환
 }
 
 // 페이지 로드 시 게시판 초기화

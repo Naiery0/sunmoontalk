@@ -7,6 +7,7 @@
     <script src="../socket.io/socket.io.js"></script>
     <meta charset="UTF-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.0/wordcloud2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -15,14 +16,18 @@
             <div id="chatLobby">
                 <span>익명의 상대방과 대화를 나눠보세요!</span>
             </div>
-            <div id="chatStat">
+            <div id="chatStat"></div>
+            <div id="chatTime">
+                <span class='label'>자주 이용하는 시간대는?</span>
+                <canvas id="timeChart"></canvas>
             </div>
         </div>
 
         <div id="tool">
             <input class="btn" id="btn" type="button" value="시작하기" onclick="start_matching(1)">
-            <span class="screenList" id="screen1" onclick="showSlide1()"></span>
-            <span class="screenList" id="screen2" onclick="showSlide2()"></span>
+            <span class="screenList" id="screen1" onclick="showSlide(1)"></span>
+            <span class="screenList" id="screen2" onclick="showSlide(2)"></span>
+            <span class="screenList" id="screen3" onclick="showSlide(3)"></span>
         </div>
 
         <div id="chatLoading">
