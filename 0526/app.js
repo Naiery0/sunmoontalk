@@ -681,14 +681,29 @@ io.sockets.on('connection', function (socket) {
   })
 
   socket.on('message', function (data) {
-    data.name = socket.name;
-    // 현재 소켓이 속한 채팅방 ID를 가져옵니다.
+    let nickname;
     const chatRoomId = getChatRoomId(socket);
-    //console.log("가져온 룸id:" + chatRoomId);
-    if (chatRoomId) {
-      // 해당 채팅방에만 메시지 전송
-      socket.to(chatRoomId).emit('update', data);
+    const query1 = `SELECT nickname FROM userdata WHERE username = ?`;
+    connection.query(query1, [data.username], (error, results) => {
+      if (error) {
+        console.error('데이터베이스 조회 에러:', error);
+        return;
+      }
+  
+      if (results.length > 0) {
+        nickname = results[0].nickname;
+        data.username=nickname;
+        //data.name = socket.name;
+        // 현재 소켓이 속한 채팅방 ID를 가져옵니다.
+        //console.log("가져온 룸id:" + chatRoomId);
+        if (chatRoomId) {
+          // 해당 채팅방에만 메시지 전송
+          socket.to(chatRoomId).emit('update', data);
+        }
+      }
     }
+    )
+
 
   });
   //소켓이 연결을 종료했을 때
@@ -879,6 +894,7 @@ function getChatRoomId(socket) {
   return null;
 }
 function getNickname(id) {
+  let nick;
   const query1 = `SELECT nickname FROM userdata WHERE username = ?`;
   connection.query(query1, [id], (error, results) => {
     if (error) {
@@ -887,12 +903,11 @@ function getNickname(id) {
     }
 
     if (results.length > 0) {
-      const userInfo = results[0];
-      nick = userInfo.nickname;
+      nick = results[0].nickname;
+      return nick;
     }
   }
   )
-  return nick;
 };
 
 server.listen(80, () => {

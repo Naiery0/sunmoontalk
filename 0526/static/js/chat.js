@@ -4,17 +4,22 @@ const chatInput = document.getElementById("chat_Input");
 const socket = io();
 
 const username = decryptSessionID(document.cookie);
+let whatname;
 let colorMine;
 let colorOther;
 
 let chatLogs=[];
 let chatRoomId;
+let hereIsGroup=false; //이게 트루면 그룹채팅방임. //socket.on('update' 부분에서 닉네임 쓰려면 data.username 하면됨
 
 //연결
 socket.on('connect', function () {
     const name = decryptSessionID(document.cookie); 
     //이부분에서 match.js에서 보내준 chatRoomId를 받아서
     chatRoomId = localStorage.getItem('roomid');
+    if (chatRoomId=='groupchat'){
+        hereIsGroup=true;
+    }
     //서버에 새로운 유저가 왔다 알림
     //이부분에서 chatRoomId를 서버로 보낸다.
     //서버가 받으면 수신한 소켓에게 chatRoomId를 부여한다.
@@ -71,11 +76,10 @@ socket.on('disconnect', function () {
     // 채팅 입력 폼 비활성화
     chatLog.scrollTop = chatLog.scrollHeight;
     chatInput.disabled = true;
+    hereIsGroup=false;
 });
 
-
-socket.on('update', function (data) {
-
+socket.on('update', function (data) { 
     if (data.type == 'disconnect') { //이 부분은 상대가 나갔으면 상대방 나갔다고 출력하는 부분임. `${data.message}`만 유지해주면 댐
         chatLog.innerHTML +=
             "<span class='chat_message_wrap'>"
@@ -102,23 +106,41 @@ socket.on('update', function (data) {
         if (hour < 10) hour = "0" + hour;
         if (min < 10) min = "0" + min;
 
-        chatLog.innerHTML +=
-        "<div class='chat_message_wrap'>" +
-            "<div class='chat chat_message_other'>" +
-                "<div class='chat_profile' style='background-color:"+colorOther+"'>" +
-                    "<img class='Imgprofile' src='../assets/person.png'>" +
+        if(hereIsGroup){
+            chatLog.innerHTML +=
+            "<div class='chat_message_wrap'>" +
+                "<div class='chat chat_message_other'>" +
+                    "<div class='chat_profile' style='background-color:"+colorOther+"'>" +
+                        "<div class='chat_username'>"+`${data.username}`+"</div>"+
+                        "<img class='Imgprofile' src='../assets/person.png'>" +
+                    "</div>" +
+                    "<div class='chat_output'>" +
+                        `${data.message}` +
+                    "</div>" +
+                    "<div class='chat_time chat_time_other'>" +
+                        hour +":" +min +
+                    "</div>" +
                 "</div>" +
-                "<div class='chat_output'>" +
-                    `${data.message}` +
+            "</div>";
+        }
+        else{
+            chatLog.innerHTML +=
+            "<div class='chat_message_wrap'>" +
+                "<div class='chat chat_message_other'>" +
+                    "<div class='chat_profile' style='background-color:"+colorOther+"'>" +
+                        "<img class='Imgprofile' src='../assets/person.png'>" +
+                    "</div>" +
+                    "<div class='chat_output'>" +
+                        `${data.message}` +
+                    "</div>" +
+                    "<div class='chat_time chat_time_other'>" +
+                        hour +":" +min +
+                    "</div>" +
                 "</div>" +
-                "<div class='chat_time chat_time_other'>" +
-                    hour +":" +min +
-                "</div>" +
-            "</div>" +
-        "</div>";
-
+            "</div>";
+        }
         chatLog.scrollTop = chatLog.scrollHeight;
-        chatLogs.push({ roomid: chatRoomId, username: `${data.username}`, message: `${data.message}`, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
+        chatLogs.push({ roomid: chatRoomId, username: `${data.userid}`, message: `${data.message}`, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
     }
 });
 
@@ -161,7 +183,7 @@ function send() {
             "</div>";
 
         //서버에 메세지 이벤트, 내용 전달
-        socket.emit('message', { type: 'message', username: username, message: message });
+        socket.emit('message', { type: 'message', username: username, userid: username, message: message });
         if(chatRoomId=='groupchat'){
             const groupChatLog=[];
             groupChatLog.push({ roomid: chatRoomId, username: username,  message: message, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` })

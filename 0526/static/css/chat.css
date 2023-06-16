@@ -7,12 +7,14 @@ html {
     --chatother : white;
     --chatoutput : black;
     --chatnotice : gray;
+    --chatUsername : black;
 }
 .root.darkmode{
     --background-color: #4c4c4c; /* 기본 배경 색상 */
     --chatmine : #007bff;
     --chatother : #f1f1f1;
     --chatnotice : white;
+    --chatUsername : white;
 }
 #chat_Input {
     position: absolute;
@@ -60,8 +62,8 @@ html {
 }
 
 .chat_message_wrap {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
 }
 
 .chat_message_wrap .chat_message_mine {
@@ -147,6 +149,21 @@ html {
     margin-left: 10px;
     margin-top: 10px;
 }
+
+.chat_username {
+    position: absolute;
+    color: var(--chatUsername);
+    font-size: 1em;
+    top: -1.1em;
+    left: -0.5em;
+    font-size:1.1em;
+    width: 4em;
+    text-align: center;
+}
+.darkmode .chat_username {
+    background-color: transparent;
+    color: darkgray;
+} 
 
 .chat_notice {
     position: relative;
