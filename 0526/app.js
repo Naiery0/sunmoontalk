@@ -19,21 +19,21 @@ const filter = new Filter();
 //console.log(filter.clean("욕을 합니다 개새끼")); ==> 욕을 합니다 *** 로 출력
 
 const connection = mysql.createConnection({
-  host: '211.247.48.218',
+  host: 'localhost',
   user: 'root',
   password: '123456',
   database: 'userdata'
 });
 
 const logdata = mysql.createConnection({
-  host: '211.247.48.218',
+  host: 'localhost',
   user: 'root',
   password: '123456',
   database: 'chatlogs'
 });
 
 const communitydata = mysql.createConnection({
-  host: '211.247.48.218',
+  host: 'localhost',
   user: 'root',
   password: '123456',
   database: 'community'

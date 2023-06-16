@@ -93,6 +93,7 @@ socket.on('update', function (data) {
         else {
             chatInput.disabled = true;
         }
+        chatLog.scrollTop = chatLog.scrollHeight;
     }
     else {
         let date = new Date();
@@ -191,8 +192,8 @@ function send() {
         }
         else{
             chatLogs.push({ roomid: chatRoomId, username: username,  message: message, sendtime: `${year}-${month}-${day} ${hour}:${min}:${sec}` });
-            chatLog.scrollTop = chatLog.scrollHeight;
         }
+        chatLog.scrollTop = chatLog.scrollHeight;
     }
 }
 
