@@ -9,33 +9,15 @@
 
 <body>
     <div class="container">
-        <div class="BoardList">
-            <ul class="BoardList-wrap">
-                <input id="search" type="text" placeholder="검색">
-                <input class="searchBtn" type="button">
-                <li class="BoardList-sel">자유게시판</li>
-                <li class="BoardList-sel">추가게시판</li>
-            </ul>
+        <div class="postCommentWrap">
+            <span id="nickname"></span>
+            <span class="LengthWrap"><span id="textLength">0</span>/<span id="maxLength">200</span></span>
+            <textarea id="comment" autocomplete="off" placeholder="글을 남겨보세요" oninput="updateTextLength()"></textarea>
+            <input class="addBtn" type="button" value="등록" onclick="sendPost()">
         </div>
-        <div class="BoardContent">
-            <div class="ContentWrap">
-                <table class="ContentFrame">
-                    <tr class="ContentRow">
-                        <td class="Content Index"><b>번호</b></td>
-                        <td class="Content Title"><b>제목</b></td>
-                        <td class="Content Writer"><b>글쓴이</b></td>
-                        <td class="Content Date"><b>등록일</b></td>
-                        <td class="Content Hits"><b>조회</b></td>
-                        <td class="Content Recommend"><b>추천</b></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="toolWrap">
-                <input class="btn" type="button" value="목록">
-                <input class="btn" type="button" value="글쓰기" onclick='convertScreen("./addCommunity.html")'>               
-            </div>
-        </div>
+        <div id="commentNav"></div>
+        <div id="readCommentWrap"></div>
     </div>
-    <srcipt src="../js/community.js"></srcipt>
+    <script src="../js/community.js"></script>
 </body>
 </html>

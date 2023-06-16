@@ -32,6 +32,13 @@ const logdata = mysql.createConnection({
   database: 'chatlogs'
 });
 
+const communitydata = mysql.createConnection({
+  host: '211.247.48.218',
+  user: 'root',
+  password: '123456',
+  database: 'community'
+})
+
 app.use('/css', express.static(path.join(__dirname, 'static/css')));
 app.use('/js', express.static(path.join(__dirname, 'static/js')));
 app.use('/assets', express.static(path.join(__dirname, 'static/assets')));
@@ -159,7 +166,7 @@ const sendMail = (req, res, email) => {
     if (error) {
       console.log(error);
       res.status(500).json({ message: '이메일 전송에 실패했습니다.' });
-    } 
+    }
     else {
       console.log('Email sent: ' + info.response);
       const exists = false;
@@ -247,8 +254,8 @@ app.post('/signup', (req, res) => {
         res.status(500).json({ error: 'Database error' });
         return;
       }
-
       res.status(200).json({ message: 'Signup successful' });
+
     }
   );
 });
@@ -352,87 +359,16 @@ app.post('/change-nickname', (req, res) => {
   }
 });
 
-
-/*
-// 워드클라우드 데이터 요청에 대한 처리.....형태소 분석이 없는 ver
-app.get('/wordcloud', (req, res) => {
-  // 채팅 로그 데이터를 DB에서 가져오는 작업
-  logdata.query('SELECT message FROM chatlogs', (err, results) => {
-    if (err) {
-      console.error('채팅 로그 데이터 조회 에러:', err);
-      res.status(500).json({ error: '채팅 로그 데이터 조회에 실패했습니다.' });
-      return;
-    }
-
-    // 채팅 로그 데이터를 단어로 분리하여 단어 빈도수를 계산하는 작업
-    const wordCounts = {}; // 단어 빈도수를 저장할 객체
-
-    for (let i = 0; i < results.length; i++) {
-      const message = results[i].message;
-
-      // 은/는/이/가/을/를에 따라 단어를 분리
-      const words = message.split(/은 |는 |이 |가 |을 |를|, |. /);
-
-      for (let j = 0; j < words.length; j++) {
-        const word = words[j].trim();
-
-        // 자음이나 모음만 있는 글자는 제외
-        if (isOnlyConsonantsOrVowels(word)) {
-          continue;
-        }
-
-        if (wordCounts[word]) {
-          wordCounts[word]++; // 이미 존재하는 단어면 빈도수 증가
-        } else {
-          wordCounts[word] = 1; // 새로운 단어면 빈도수 초기화
-        }
-      }
-    }
-
-    // 클라이언트로 단어 빈도수 정보를 전달
-    res.json({ wordCounts });
-  });
-});
-
-// 자음이나 모음만 있는 글자인지 확인하는 함수
-function isOnlyConsonantsOrVowels(word) {
-  const consonants = /[ㄱ-ㅎ]/;
-  const vowels = /[ㅏ-ㅣ]/;
-
-  // 자음이나 모음만 있는 글자인지 검사
-  return word.split('').every((char) => {
-    return consonants.test(char) || vowels.test(char);
-  });
-}*/
-
-// 워드클라우드 데이터 요청에 대한 처리
-/*
-app.get('/wordcloud', (req, res) => {
-  exec('python wordCloud.py', (error, stdout, stderr) => {
-    if (error) {
-      console.error('파이썬 스크립트 실행 에러:', error);
-      res.status(500).json({ error: '워드클라우드 데이터 처리에 실패했습니다.' });
-      return;
-    }
-
-    try {
-      const wordCounts = JSON.parse(stdout);
-      res.json({ wordCounts });
-    } catch (parseError) {
-      console.error('JSON 파싱 에러:', parseError);
-      res.status(500).json({ error: '데이터 파싱에 실패했습니다.' });
-    }
-  });
-});*/
-
 //딜레이를 줄이기 위한 몸부림
 let cachedWordCounts = null; // 캐시된 워드클라우드 데이터
+let cachedEmotionCounts = null; // 감정 분석 데이터
+let cachedTimeCounts = null; // 시간 분포 데이터
 let serverTime = 0;
 const reSearchTime = 10; //워드클라우드 캐싱 시간 설정(분 단위)
 // 10분마다 워드클라우드 데이터 생성 및 캐싱할 함수
 function generateAndCacheWordCloudData() {
   // 워드클라우드 데이터 생성 로직 (파이썬 스크립트 실행 등)
-  exec('python wordCloud.py', (error, stdout, stderr) => {
+  exec('python static/python/wordCloud.py', (error, stdout, stderr) => {
     if (error) {
       console.error('파이썬 스크립트 실행 에러:', error);
       return;
@@ -444,9 +380,38 @@ function generateAndCacheWordCloudData() {
     } catch (parseError) {
       console.error('JSON 파싱 에러:', parseError);
     }
+  });  
+  
+  exec('python static/python/chatTime.py', (error, stdout, stderr) => {
+    if (error) {
+      console.error('파이썬 스크립트 실행 에러:', error);
+      return;
+    }
+
+    try {
+      cachedTimeCounts = JSON.parse(stdout);
+      //console.log(cachedTimeCounts);
+      console.log('시간별 채팅 데이터 캐싱 완료');
+    } catch (parseError) {
+      console.error('JSON 파싱 에러:', parseError);
+    }
   });
-  console.log("서버 가동 "+serverTime+"분 경과");
-  serverTime= serverTime+reSearchTime;
+
+/*  exec('python static/python/emotion.py', (error, stdout, stderr) => {
+    if (error) {
+      console.error('파이썬 스크립트 실행 에러:', error);
+      return;
+    }
+
+    try {
+      cachedEmotionCounts = JSON.parse(stdout);
+      console.log('감정분석 데이터 캐싱 완료');
+    } catch (parseError) {
+      console.error('JSON 파싱 에러:', parseError);
+    }
+  });*/
+  console.log("서버 가동 " + serverTime + "분 경과");
+  serverTime = serverTime + reSearchTime;
 }
 
 // 10분마다 워드클라우드 데이터 생성 및 캐싱 실행
@@ -460,6 +425,78 @@ app.get('/wordcloud', (req, res) => {
     res.status(404).json({ error: '워드클라우드 데이터를 찾을 수 없습니다.' });
   }
 });
+
+//감정분석데이터 요청 처리
+app.get('/emotion', (req, res) => {
+  if (cachedEmotionCounts) {
+    res.json({ emotionCounts: cachedEmotionCounts });
+  } else {
+    res.status(404).json({ error: '감정분석 데이터를 찾을 수 없습니다.' });
+  }
+});
+
+app.get('/chattime', (req, res) => {
+  if (cachedTimeCounts) {
+    res.json({ timeCounts: cachedTimeCounts});
+  } else {
+    res.status(404).json({ error: '시간별 채팅 통계 데이터를 찾을 수 없습니다.' });
+  }
+})
+
+// 게시글 목록 조회
+app.get('/getPosts', (req, res) => {
+  //const nick = getNickname(req.body.id);
+  //console.log("닉네임 추출 성공? "+nick);
+  // 쿼리문 생성
+  const query = 'SELECT * FROM community';
+
+  // 게시글 목록 조회
+  communitydata.query(query, (err, result) => {
+    if (err) {
+      //console.error('Error retrieving posts:', err);
+      res.status(500).send('Error retrieving posts');
+    } else {
+      //console.log('Posts retrieved:', result);
+      res.status(200).json(result);
+    }
+  });
+});
+
+app.post('/savePost', (req, res) => {
+  // 클라이언트에서 전달받은 데이터
+  const { content, writer, writetime } = req.body;
+  let nick;
+  const query1 = `SELECT nickname FROM userdata WHERE username = ?`;
+  connection.query(query1, [writer], (error, results) => {
+    if (error) {
+      console.error('데이터베이스 조회 에러:', error);
+      return;
+    }
+
+    if (results.length > 0) {
+      const userInfo = results[0];
+      nick = userInfo.nickname;
+
+      const query = 'INSERT INTO community (content, writer, writetime, username) VALUES (?, ?, ?, ?)';
+      const values = [content, nick, writetime, writer];
+      // 게시물 삽입
+      communitydata.query(query, values, (err, result) => {
+        if (err) {
+          console.error('Error inserting post:', err);
+          res.status(500).send('Error inserting post');
+        } else {
+          //console.log('Post inserted:', result);
+          res.status(200).json({ success: true });
+        }
+      });
+    }
+  })
+});
+
+app.get('/removePost', (req, res) => {
+
+})
+
 
 
 function generateSessionID() {
@@ -483,10 +520,10 @@ function encryptSessionID(username) {
 function decryptSessionID(encryptedSessionID) {
   // 'sessionID=' 부분을 제외한 문자열 추출
   const encryptedString = encryptedSessionID.replace('sessionID=', '');
-  
+
   // Base64 복호화
   const base64Decoded = atob(encryptedString);
-  
+
   // UTF-8 디코딩
   const decoder = new TextDecoder('utf-8');
   const decryptedSessionID = decoder.decode(new Uint8Array([...base64Decoded].map((c) => c.charCodeAt(0))));
@@ -550,11 +587,11 @@ io.sockets.on('connection', function (socket) {
     }
   });
 
-    // 'groupchat' 요청 처리
+  // 'groupchat' 요청 처리
   socket.on('requestGroupChat', () => {
     console.log("그룹챗 요청 받음");
     //그룹 채팅방 인원 수 추가
-    roomIndex = roomIndex+1;
+    roomIndex = roomIndex + 1;
 
     // 사용자의 쿠키가 enjoyCookie 배열에 없는 경우에만 입장
     let cookieExists = false;
@@ -565,22 +602,22 @@ io.sockets.on('connection', function (socket) {
       }
     }
     if (!cookieExists) {
-    // 해당 쿠키를 enjoyCookie 배열에 추가
-    enjoyCookie.push(cookie);
+      // 해당 쿠키를 enjoyCookie 배열에 추가
+      enjoyCookie.push(cookie);
 
-    const chatRoomId = 'groupchat';
-    // 클라이언트를 그룹 채팅방에 입장
-    socket.emit('matchSuccess', {chatRoomId: chatRoomId});
-    //socket.join(groupChatRoomId);
-    // 클라이언트에게 그룹 채팅방 입장 정보를 전송
-    socket.emit('groupChatJoin', roomIndex); //클라측에서 setroomid 소켓 요청 작업 필요함/ 위 입장 하는 작업도 setroomid 응답부분에서 할 듯
+      const chatRoomId = 'groupchat';
+      // 클라이언트를 그룹 채팅방에 입장
+      socket.emit('matchSuccess', { chatRoomId: chatRoomId });
+      //socket.join(groupChatRoomId);
+      // 클라이언트에게 그룹 채팅방 입장 정보를 전송
+      socket.emit('groupChatJoin', roomIndex); //클라측에서 setroomid 소켓 요청 작업 필요함/ 위 입장 하는 작업도 setroomid 응답부분에서 할 듯
     }
     else {
       socket.emit('matchCancle');
     }
   });
 
-  
+
   socket.on('newUser', function (name) {
     socket.name = name;
     enjoyCookie.push(cookie);
@@ -599,12 +636,12 @@ io.sockets.on('connection', function (socket) {
         // 'welcome' 이벤트와 함께 nickname 전송
         const chatRoomId = getChatRoomId(socket);
 
-        if(chatRoomId=='groupchat'){
-          socket.emit('roomIndex',{roomIndex: roomIndex});
-          socket.to(chatRoomId).emit('welcome', {message : nickname+"님이 입장하셨습니다. 현재 인원 수 : "+roomIndex});
+        if (chatRoomId == 'groupchat') {
+          socket.emit('roomIndex', { roomIndex: roomIndex });
+          socket.to(chatRoomId).emit('welcome', { message: nickname + "님이 입장하셨습니다. 현재 인원 수 : " + roomIndex });
         }
-        else{
-          socket.to(chatRoomId).emit('welcome', {message : nickname+"님이 입장하셨습니다."});
+        else {
+          socket.to(chatRoomId).emit('welcome', { message: nickname + "님이 입장하셨습니다." });
         }
       }
     });
@@ -615,8 +652,8 @@ io.sockets.on('connection', function (socket) {
 
   // 이부분에서 룸아디를 다시 받아서 해당 방의 정보를 재설정!!
   socket.on('sendRoomId', function (chatRoomId) {
-    if(chatRoomId != 'groupchat'){
-    logSave[chatRoomId] = 0;//로그 보냈나 설정
+    if (chatRoomId != 'groupchat') {
+      logSave[chatRoomId] = 0;//로그 보냈나 설정
     }
     const chatRoom = chatRooms[chatRoomId];
     if (chatRoom) {
@@ -657,11 +694,11 @@ io.sockets.on('connection', function (socket) {
     if (queueIndex !== -1) {
       matchQueue.splice(queueIndex, 1);
     }
-    
-    if(chatRoomId=='groupchat'){
+
+    if (chatRoomId == 'groupchat') {
       //그룹 채팅방 인원 수 감소
-      if(roomIndex>0){
-        roomIndex = roomIndex-1;
+      if (roomIndex > 0) {
+        roomIndex = roomIndex - 1;
       }
       const userid = decryptSessionID(cookie);
       const query = `SELECT nickname FROM userdata WHERE username = ?`;
@@ -670,33 +707,33 @@ io.sockets.on('connection', function (socket) {
           console.error('데이터베이스 조회 에러:', error);
           return;
         }
-  
+
         if (results.length > 0) {
           const userInfo = results[0];
           const nickname = userInfo.nickname;
           socket.to(chatRoomId).emit('update', {
             type: 'disconnect',
             name: 'SERVER',
-            message: nickname + '님이 채팅을 종료했습니다. 현재 인원 수 : '+roomIndex,
-          },roomIndex);
+            message: nickname + '님이 채팅을 종료했습니다. 현재 인원 수 : ' + roomIndex,
+          }, roomIndex);
         }
       })
       //로그 요청 
       socket.to(chatRoomId).emit('giveLog');
     }
-    else{
-    //로그 요청 
-    socket.to(chatRoomId).emit('giveLog');
-    //console.log(`${socket.id}이(가) 연결을 종료했습니다.`);
-    //console.log(socket.name + ' 님이 나가셨습니다.');
-    socket.to(chatRoomId).emit('update', {
-      type: 'disconnect',
-      name: 'SERVER',
-      message: /*socket.name +*/ '상대방이 채팅을 종료했습니다.',
-    });
-  }
+    else {
+      //로그 요청 
+      socket.to(chatRoomId).emit('giveLog');
+      //console.log(`${socket.id}이(가) 연결을 종료했습니다.`);
+      //console.log(socket.name + ' 님이 나가셨습니다.');
+      socket.to(chatRoomId).emit('update', {
+        type: 'disconnect',
+        name: 'SERVER',
+        message: /*socket.name +*/ '상대방이 채팅을 종료했습니다.',
+      });
+    }
   });
-  
+
   //채팅 로그저장
   socket.on('log', function (chatLog) {
     const chatRoomId = getChatRoomId(socket);
@@ -714,14 +751,14 @@ io.sockets.on('connection', function (socket) {
 
   //그룹채팅 로그저장
   socket.on('groupLog', function (chatLog) {
-      //로그를 받고
-      chatLog.forEach(log => {
-        const { roomid, username, message, sendtime } = log;
-        logdata.query(
-          'INSERT INTO chatlogs (roomid ,username, message, sendtime) VALUES (?, ?, ?, ?)', [log.roomid, log.username, log.message, log.sendtime]);
-      });
-      console.log("그룹챗 로그저장 완료");
-    }
+    //로그를 받고
+    chatLog.forEach(log => {
+      const { roomid, username, message, sendtime } = log;
+      logdata.query(
+        'INSERT INTO chatlogs (roomid ,username, message, sendtime) VALUES (?, ?, ?, ?)', [log.roomid, log.username, log.message, log.sendtime]);
+    });
+    console.log("그룹챗 로그저장 완료");
+  }
   );
 
   // 사용자 배열에서 제거
@@ -828,6 +865,22 @@ function getChatRoomId(socket) {
   }
   return null;
 }
+function getNickname(id) {
+  const query1 = `SELECT nickname FROM userdata WHERE username = ?`;
+  connection.query(query1, [id], (error, results) => {
+    if (error) {
+      console.error('데이터베이스 조회 에러:', error);
+      return;
+    }
+
+    if (results.length > 0) {
+      const userInfo = results[0];
+      nick = userInfo.nickname;
+    }
+  }
+  )
+  return nick;
+};
 
 server.listen(80, () => {
   generateAndCacheWordCloudData();

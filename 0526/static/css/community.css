@@ -6,116 +6,126 @@ input{
     font-size:1.5em;
 }
 .container{
-    display: flex;
-}
-.BoardList{
-    position:relative;
-    width:18.5%;
-    height:46em;
-    min-width: 15em;
-    background-color: RGB(0,117,128);
-    color:white;
-}
-.BoardContent{
-    position:relative;
-    width:79.5%;
-    height:46em;
-    min-width: 40em;
-    margin-left:0.5em;
-}
-.BoardList-wrap{
-    width: 82%;
-    list-style: none;
-    font-size:1.5em;
-}
-.BoardList-sel{
-    margin-top:0.3em;
-    cursor:pointer;
-}
-.BoardList-sel:hover{
-    text-decoration: underline;
-    text-decoration-line :underline;
-    text-decoration-thickness : 1px;
-}
-.ContentWrap{
-    position:relative;
-    height:90%;
-}
-.toolWrap{
-    position:relative;
-    border:1px solid green;
-    height:9.5%;
-}
-.btn{
-    position:relative;
-    border:1px solid gray;
-    padding-left:1em;
-    padding-right:1em;
-    padding-top:0.25em;
-    padding-bottom:0.25em;
+    position:absolute;
+    width:70%;
+    height: 98%;
+    margin-left: 14.5%;
 
-    border-radius: 10px;
-    cursor:pointer;
+    display: flex;
+    justify-content: center;
 }
-.toolWrap .btn:nth-child(1){
-    background-color: white;
-    color:black;
+.postCommentWrap{
+    position: absolute;
+    border:1px solid lightgray;
+    width: 93%;
+    height: 20%;
+    border-radius: 15px;
 }
-.toolWrap .btn:nth-child(2){
-    background-color: gray;
-    color:white;
+#nickname{
+    position:absolute;
+    font-size:1.3em;
+    font-weight: bold;
+    left:1em;
+    top:0.3em;
 }
-#search{
+#comment{
     position: relative;
-    font-size:1em;
-    width:100%;
-    left:-1em;
-    margin-bottom:1em;
+    font-size:1.3em;
+    font-family: "omyu_pretty";
+    margin-left: 0.5em;
+    margin-top: 1.5em;
+    padding-left: 0.5em;
+    padding-right: 2em;
+    width:91%;
+    height:70%;
+    resize:none;
+    border:1px solid transparent;
 }
-#search:focus{
+#comment::-webkit-scrollbar {
+    display: block;
+    width:8px;
+}
+#comment::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+    border-radius: 10px;
+}
+#comment:focus{
     outline: none;
 }
-.searchBtn{
+.LengthWrap{
+    position: absolute;
+    right:1em;
+    top:0.5em;
+    color:darkgray;
+}
+.addBtn{
     position:absolute;
-    top:0.7em;
-    right:0.55em;
-    width:0.8em;
-    height:0.84em;
-    background-color: skyblue;
-    border:none;
+    border: none;
+    background-color: transparent;
+    bottom:0.5em;
+    right:0.8em;
     cursor:pointer;
 }
-.ContentFrame{
+.addBtn:hover{
+    color:gray;
+}
+#readCommentWrap{
     position:relative;
-    width:100%;
-    height:100%;
+    width:93.5%;
+    margin-top: 12.5em;
+    display: flex;
+    flex-direction: column;
 }
-.ContentRow{
+.commentWrap{
+    position:relative;
+    background-color: lightgray;
+    border-radius: 15px;
+    padding: 1em;
+
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.3em;
+    margin-bottom: 1em;
+    width:95%;
+}
+.commentWrap .commentAuthor{
     position: relative;
-    height:5%;
-    border:1px solid black;
-}
-.Content{
-    font-size:1.5em;
-    text-align: center;
-    
-    border-bottom: 1px solid lightgray;
-}
-.Index{
-    width:5%;
-}
-.Title{
-    width:50%;
-}
-.Writer{
+    font-weight: bold;
+    top:0.2em;
     width:20%;
 }
-.Date{
-    width:15%;
+.commentWrap .commentDate{
+    position:relative;
+    width:20%;
+    color:darkgray;
+    top:0.2em;
 }
-.Hits{
-    width:5%;
+.commentWrap .commentContent{
+    position: relative;
+    margin-top: 0.8em;
+    width:100%;
 }
-.Recommend{
-    width:5%;
+
+body::-webkit-scrollbar {
+    display: block;
+    width:10px;
+}
+body::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 10px;
+}
+
+#commentNav{
+    position: absolute;
+    width:92%;
+    top:9.9em;
+    height:2em;
+    text-align: center;
+}
+.navBtn{
+    position: relative;
+    font-size: 1.3em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    cursor:pointer;
 }

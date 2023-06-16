@@ -1,52 +1,201 @@
+const nicknameFrame = document.getElementById("");
+let reversedPosts;
+let maxPage;
+let myname;
 // 글 목록을 가져오는 함수
 function getPosts() {
-    fetch('/api/posts')
+    return fetch('/getPosts')
         .then(response => response.json())
         .then(posts => {
-            const postList = document.getElementById('post-list');
-            postList.innerHTML = '';
-
-            posts.forEach(post => {
-                const postItem = document.createElement('div');
-                postItem.innerHTML = `
-                    <h3>${post.title}</h3>
-                    <p>글쓴이: ${post.author}</p>
-                    <p>등록일: ${post.date}</p>
-                    <p>조회수: ${post.views}</p>
-                    <p>추천수: ${post.likes}</p>
-                `;
-                postList.appendChild(postItem);
-            });
+            return posts;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // 에러 처리
         });
 }
 
-// 글 추가 함수
-function addPostToBoard(post) {
-    const contentFrame = document.querySelector('.ContentFrame');
+function initializeBoard() {
+    const contentFrame = document.getElementById("readCommentWrap");
 
-    const row = document.createElement('tr');
-    row.classList.add('ContentRow');
-
-    row.innerHTML = `
-        <td class="Content Index">${post.index}</td>
-        <td class="Content Title">${post.title}</td>
-        <td class="Content Writer">${post.author}</td>
-        <td class="Content Date">${post.date}</td>
-        <td class="Content Hits">${post.views}</td>
-        <td class="Content Recommend">${post.likes}</td>
-    `;
-
-    contentFrame.appendChild(row);
-}
-
-// 페이지 로드 시 글 목록 가져오기
-window.onload = function() {
     getPosts().then(posts => {
-        posts.forEach(post => {
-            addPostToBoard(post);
-        });
-    });
 
-    const createPostForm = document.getElementById('create-post-form');
-    createPostForm.addEventListener('submit', createPost);
+        console.log(posts.length);
+        console.log(posts);
+
+      
+        const commentNav = document.getElementById("commentNav");
+        for(let i=1;i<=((posts.length/10)+1);i++){
+            commentNav.innerHTML += "<span class='navBtn' id='nav"+i+"' onclick='displayPage("+(i-1)+")'>"+i+"</span>";
+
+            if(i==1){
+                document.getElementById("nav"+1).style.color = 'darkgray';
+            }
+        }
+        maxPage = Math.floor(((posts.length/10)+1));
+        console.log("maxPage : "+maxPage);
+        
+        reversedPosts = posts.reverse(); 
+        displayPage(0);
+        /*
+        reversedPosts.forEach(post => {
+            const utcTime = post.writetime;
+            const date = new Date(utcTime);
+            const options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                //second: 'numeric',
+                hour12: false
+            };
+            const localTime = date.toLocaleString('ko-KR', options);
+
+            const commentWrap = document.createElement('span');
+            commentWrap.classList.add('commentWrap');
+
+            commentWrap.innerHTML = `
+                <span class="commentAuthor">${post.writer}</span>
+                <span class="commentDate">${localTime}</span>
+                <span class="commentContent">${post.content}</span>
+            `;
+
+            contentFrame.appendChild(commentWrap);
+        });
+        */
+    });
+}
+
+function displayPage(index){
+    const contentFrame = document.getElementById("readCommentWrap");
+    contentFrame.innerHTML = "";
+    
+    for(let i=0;i<maxPage;i++){
+
+        const nav = document.getElementById("nav"+(i+1));
+        if(index==i){
+            nav.style.color = 'darkgray';
+        }
+        else{
+            nav.style.color = 'black';
+        }
+    }
+
+    for(let i=(index*10);i<((index*10)+10);i++){
+
+        if (reversedPosts[i] != null) {
+            const utcTime = reversedPosts[i].writetime;
+            const date = new Date(utcTime);
+            const options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                //second: 'numeric',
+                hour12: false
+            };
+            const localTime = date.toLocaleString('ko-KR', options);
+
+            const commentWrap = document.createElement('span');
+            commentWrap.classList.add('commentWrap');
+
+            commentWrap.innerHTML = `
+            <span class="commentAuthor">${reversedPosts[i].writer}</span>
+            <span class="commentDate">${localTime}</span>
+            <span class="commentContent">${reversedPosts[i].content}</span>
+            `;
+
+            contentFrame.appendChild(commentWrap);
+        }
+        else break;
+    }
+}
+
+function decryptSessionID(encryptedSessionID) {
+    const encryptedString = encryptedSessionID.replace('sessionID=', '');
+    const base64Decoded = atob(encryptedString);
+    const decoder = new TextDecoder('utf-8');
+    const decryptedSessionID = decoder.decode(new Uint8Array([...base64Decoded].map((c) => c.charCodeAt(0))));
+
+    return decryptedSessionID;
+}
+
+// 현재 날짜 문자열 반환 함수
+function getCurrentDate() {
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = String(today.getMonth() + 1).padStart(2, '0');
+    let day = String(today.getDate()).padStart(2, '0');
+    let hour = ("" + today.getHours()).slice(-2);
+    let min = ("" + today.getMinutes()).slice(-2);
+    let sec = ("0" + today.getSeconds()).slice(-2);
+    let currentDate = `${year}-${month}-${day} ${hour}:${min}:${sec}`;
+
+    return currentDate;
+}
+
+function updateTextLength() {
+    var textarea = document.getElementById('comment');
+    var textLength = textarea.value.length;
+    var maxLength = parseInt(document.getElementById('maxLength').innerText);
+    var length = document.getElementById('textLength');
+
+    length.innerText = textLength;
+
+    if (textLength > maxLength) {
+        textarea.value = textarea.value.substring(0, maxLength);
+        length.style.color = 'red'; // 예를 들어, 초과한 글자 수를 강조하는 스타일을 추가
+        length.innerText = maxLength;
+    } else {
+        length.style.color = ''; // 초과하지 않은 경우 스타일을 초기화
+    }
+}
+function sendPost() {
+    // 게시글 쓰기
+    //const postTitle = document.getElementById('post-title').value; 제목 필요없어짐
+    const postAuthor = decryptSessionID(document.cookie);
+    const postDate = getCurrentDate();
+    const postContent = document.getElementById('comment').value;
+
+    if (postContent != "") {
+        // 서버로 데이터 전송 (예시: Fetch API 사용)
+        fetch('/savePost', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "writer=" + encodeURIComponent(postAuthor) +
+                "&writetime=" + encodeURIComponent(postDate) +
+                "&content=" + encodeURIComponent(postContent)
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                postContent.innerText = "";
+                window.location.reload();
+                // 서버 응답 처리
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // 에러 처리
+            });
+    }
+    else {
+        alert("입력된 내용이 없습니다!")
+    }
+}
+
+
+
+
+// 페이지 로드 시 게시판 초기화
+window.onload = function () {
+    initializeBoard();
 };
