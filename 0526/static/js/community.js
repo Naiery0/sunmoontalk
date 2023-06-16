@@ -20,10 +20,6 @@ function initializeBoard() {
 
     getPosts().then(posts => {
 
-        console.log(posts.length);
-        console.log(posts);
-
-
         const commentNav = document.getElementById("commentNav");
         for (let i = 1; i <= ((posts.length / 10) + 1); i++) {
             commentNav.innerHTML += "<span class='navBtn' id='nav" + i + "' onclick='displayPage(" + (i - 1) + ")'>" + i + "</span>";
@@ -33,7 +29,6 @@ function initializeBoard() {
             }
         }
         maxPage = Math.floor(((posts.length / 10) + 1));
-        console.log("maxPage : " + maxPage);
 
         reversedPosts = posts.reverse();
         displayPage(0);
@@ -192,7 +187,6 @@ function sendPost() {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     postContent.innerText = "";
                     window.location.reload();
                     // 서버 응답 처리
@@ -229,8 +223,6 @@ function deleteComment(commentID) {
                 return response.json();
             })
             .then((data) => {
-                console.log(data);
-                postContent.innerText = "";
                 window.location.reload();
                 // 서버 응답 처리
             })
