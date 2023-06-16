@@ -38,7 +38,7 @@ function createWordCloud(wordCounts) {
     shuffle: true,
     shape: 'circle',
     drawOutOfBound: false,
-    origin: [750, 330]
+    origin: [670, 330]
   };
   // 워드클라우드 생성
   WordCloud(document.getElementById('chatStat'), options);
