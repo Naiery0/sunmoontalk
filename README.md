@@ -41,4 +41,16 @@
 - MariaDB
     
 ## 소개 영상
-[영상 보기](./image/선문톡%20소개영상.mp4)
+- 영상 안 보이면 [여기로](./image)
+
+https://github.com/user-attachments/assets/1616e0cd-1f83-4b6c-97b0-236fee92634d
+
+
+
+https://github.com/user-attachments/assets/5fc2980f-91a8-4e9f-9989-af83a76be0c8
+
+
+
+https://github.com/user-attachments/assets/8443325c-730a-4808-ad59-e91398905aad
+
+
